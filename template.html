@@ -1,0 +1,466 @@
+<title>ZET8 — Tech Solutions for Businesses</title>
+<style>
+  :root{
+    --bg:#000000;
+    --bg-2:#0c0c0c;
+    --bg-3:#141414;
+    --line:#202020;
+    --line-2:#2c2c2c;
+    --text:#EDEDED;
+    --text-2:#B5B5B5;
+    --muted:#737373;
+    --cream:#F4F1EA;
+    --green:#3CB371;
+    --yellow:#F4C82D;
+    --red:#E84A38;
+    --blue:#5468E8;
+    --radius:16px;
+    --radius-lg:28px;
+    --maxw:1140px;
+    --ease:cubic-bezier(.2,.7,.2,1);
+    --disp:"Space Grotesk",Bahnschrift,"Segoe UI",Arial,sans-serif;
+    --body:Inter,"Segoe UI",Helvetica,Arial,sans-serif;
+    --mono:"JetBrains Mono","Cascadia Code",Consolas,monospace;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth;scroll-padding-top:110px}
+  @media(prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto}
+    *{animation:none!important;transition:none!important}
+    .reveal{opacity:1!important;transform:none!important}
+  }
+  body{background:var(--bg);color:var(--text);font-family:var(--body);font-size:16.5px;line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  h1,h2,h3,h4{font-family:var(--disp);font-weight:700;line-height:1.05;letter-spacing:-.03em;color:var(--cream)}
+  a{color:inherit;text-decoration:none}
+  a:focus-visible,button:focus-visible{outline:2px solid var(--yellow);outline-offset:3px}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+  .mono{font-family:var(--mono);font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+  .w1{color:var(--green)}.w2{color:var(--yellow)}.w3{color:var(--red)}.w4{color:var(--blue)}
+
+  .btn{display:inline-flex;align-items:center;gap:9px;padding:16px 28px;border-radius:100px;font-weight:600;font-size:1rem;cursor:pointer;border:none;font-family:inherit;transition:.3s var(--ease)}
+  .btn-primary{background:var(--yellow);color:#000}
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 14px 32px -10px rgba(244,200,45,.55)}
+  .btn-ghost{background:transparent;color:var(--cream);border:1.5px solid var(--line-2)}
+  .btn-ghost:hover{border-color:var(--yellow);color:var(--yellow)}
+  .btn .arrow{transition:.25s}
+  .btn:hover .arrow{transform:translateX(3px)}
+
+  /* NAV */
+  header{position:fixed;top:0;left:0;right:0;z-index:1000;transition:.4s var(--ease)}
+  header.scrolled{background:rgba(0,0,0,.85);backdrop-filter:blur(16px);border-bottom:1px solid var(--line)}
+  nav{display:flex;align-items:center;justify-content:space-between;height:92px}
+  .brand-img{height:44px;width:auto;display:block}
+  .nav-links{display:flex;gap:28px;align-items:center}
+  .nav-links a.lnk{font-size:.93rem;font-weight:500;color:var(--text-2);transition:.2s}
+  .nav-links a.lnk:hover{color:var(--cream)}
+  .nav-links .btn{padding:13px 22px;font-size:.93rem}
+  .hamburger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:8px}
+  .hamburger span{width:24px;height:2px;background:var(--cream);border-radius:2px}
+
+  /* HERO */
+  .hero{padding:150px 0 90px;position:relative;overflow:hidden;text-align:center}
+  .hero::before,.hero::after{content:"";position:absolute;border-radius:50%;filter:blur(70px);opacity:.16;z-index:0;pointer-events:none}
+  .hero::before{width:520px;height:520px;background:var(--green);top:-120px;left:-100px}
+  .hero::after{width:560px;height:560px;background:var(--blue);bottom:-220px;right:-120px}
+  .hero-inner{position:relative;z-index:1}
+  .hero-logo{width:min(400px,72vw);height:auto;margin:0 auto 30px;display:block;filter:drop-shadow(0 30px 60px rgba(0,0,0,.55))}
+  .hero h1{font-size:clamp(2.2rem,6vw,4.6rem);max-width:900px;margin:0 auto}
+  .hero .sub{font-size:1.14rem;color:var(--text-2);max-width:600px;margin:26px auto 34px;line-height:1.5}
+  .hero-cta{display:flex;gap:13px;flex-wrap:wrap;justify-content:center}
+  .hero-meta{margin-top:44px;display:flex;justify-content:center;gap:30px;flex-wrap:wrap;font-family:var(--mono);font-size:.76rem;color:var(--muted);letter-spacing:.06em}
+  .hero-meta span{display:flex;align-items:center;gap:8px}
+  .hero-meta span::before{content:"";width:8px;height:8px;border-radius:2px;display:inline-block}
+  .hero-meta span:nth-child(1)::before{background:var(--green)}
+  .hero-meta span:nth-child(2)::before{background:var(--yellow)}
+  .hero-meta span:nth-child(3)::before{background:var(--red)}
+  .hero-meta span:nth-child(4)::before{background:var(--blue)}
+
+  /* reveal */
+  .reveal{opacity:0;transform:translateY(26px);transition:.8s var(--ease)}
+  .reveal.in{opacity:1;transform:none}
+  .d1{transition-delay:.06s}.d2{transition-delay:.13s}.d3{transition-delay:.2s}.d4{transition-delay:.27s}
+
+  /* SECTIONS */
+  section{padding:96px 0;position:relative}
+  .sec-head{max-width:720px;margin-bottom:48px}
+  .sec-head h2{font-size:clamp(1.9rem,4.5vw,3.2rem);margin:14px 0}
+  .sec-head p{color:var(--text-2);font-size:1.06rem;max-width:600px}
+  .eyebrow{display:inline-flex;align-items:center;gap:10px}
+  .eyebrow .dot{width:9px;height:9px;border-radius:50%;display:inline-block}
+
+  /* PRODUCTS — tabs */
+  #products{background:var(--bg-2);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .tabbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:22px}
+  .tabbar button{appearance:none;cursor:pointer;background:var(--bg);border:1.5px solid var(--line-2);border-radius:100px;color:var(--text-2);font-family:var(--disp);font-weight:600;font-size:1rem;padding:13px 24px;display:flex;align-items:center;gap:10px;transition:.3s var(--ease)}
+  .tabbar button small{font-family:var(--mono);font-size:.64rem;font-weight:400;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .tabbar button .dot{width:9px;height:9px;border-radius:50%;background:var(--hue)}
+  .tabbar button:hover{border-color:var(--hue);color:var(--cream)}
+  .tabbar button[aria-selected="true"]{border-color:var(--hue);color:var(--cream);background:var(--bg-3)}
+  .t-ponchi{--hue:var(--yellow)}
+  .t-desko{--hue:var(--green)}
+  .t-crm{--hue:var(--blue)}
+  .t-local{--hue:var(--red)}
+  .t-onsms{--hue:var(--green)}
+
+  .tabpanel{background:var(--bg);border:1px solid var(--line);border-radius:var(--radius-lg);padding:40px}
+  .tabpanel[hidden]{display:none}
+  #panel-ponchi{--hue:var(--yellow);--hue-soft:rgba(244,200,45,.1)}
+  #panel-desko{--hue:var(--green);--hue-soft:rgba(60,179,113,.1)}
+  #panel-crm{--hue:var(--blue);--hue-soft:rgba(84,104,232,.1)}
+  #panel-local{--hue:var(--red);--hue-soft:rgba(232,74,56,.1)}
+  #panel-onsms{--hue:var(--green);--hue-soft:rgba(60,179,113,.1)}
+  .panel-top{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:12px}
+  .panel-top .tag{display:inline-block;font-family:var(--mono);font-size:.64rem;letter-spacing:.14em;text-transform:uppercase;padding:5px 10px;border-radius:5px;color:var(--hue);background:var(--hue-soft);margin-bottom:12px}
+  .tabpanel h3{font-size:clamp(1.6rem,3.5vw,2.3rem);color:var(--cream)}
+  .tabpanel h3 b{color:var(--hue)}
+  .panel-domain{font-family:var(--mono);font-size:.78rem;color:var(--muted);transition:.2s}
+  a.panel-domain:hover{color:var(--hue)}
+  .tabpanel .about{color:var(--text-2);max-width:640px;margin:14px 0 30px;font-size:1.02rem}
+  .feature-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:30px}
+  .feature{background:var(--bg-3);border:1px solid var(--line);border-radius:var(--radius);padding:18px 20px;transition:.3s var(--ease)}
+  .feature:hover{border-color:var(--hue)}
+  .feature b{display:block;font-family:var(--disp);font-weight:600;font-size:.98rem;color:var(--cream);margin-bottom:5px;display:flex;align-items:center;gap:9px}
+  .feature b::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--hue);flex-shrink:0}
+  .feature span{font-size:.87rem;color:var(--text-2);line-height:1.45}
+  .panel-foot{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px}
+  .panel-meta{font-family:var(--mono);font-size:.74rem;color:var(--muted);letter-spacing:.04em}
+  .panel-cta{display:inline-flex;align-items:center;gap:9px;font-weight:600;font-size:.95rem;color:#000;background:var(--hue);padding:14px 24px;border-radius:100px;transition:.3s var(--ease)}
+  .panel-cta:hover{transform:translateY(-2px)}
+  .panel-cta .arrow{transition:.25s}
+  .panel-cta:hover .arrow{transform:translateX(3px)}
+
+  /* WHY strip */
+  #why{background:var(--bg-2);border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:72px 0}
+  .proc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  .proc-card{background:var(--bg);border:1px solid var(--line);border-radius:var(--radius);padding:28px}
+  .proc-n{font-family:var(--mono);font-size:.78rem;letter-spacing:.08em;margin-bottom:12px}
+  .proc-card:nth-child(1) .proc-n{color:var(--green)}
+  .proc-card:nth-child(2) .proc-n{color:var(--yellow)}
+  .proc-card:nth-child(3) .proc-n{color:var(--red)}
+  .proc-card h4{font-size:1.3rem;margin-bottom:8px}
+  .proc-card p{color:var(--text-2);font-size:.93rem}
+
+  /* CONTACT */
+  .contact-grid{display:grid;grid-template-columns:.95fr 1.05fr;gap:50px;align-items:start}
+  #contact h2{font-size:clamp(1.9rem,4.5vw,3rem);margin:14px 0 16px}
+  #contact .lead{color:var(--text-2);font-size:1.04rem;margin-bottom:28px;max-width:44ch}
+  .cinfo .row{display:flex;gap:13px;align-items:center;margin-bottom:14px}
+  .cinfo .ico{width:44px;height:44px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:1.05rem;flex-shrink:0;color:#000;font-weight:700}
+  .cinfo .row:nth-child(1) .ico{background:var(--green)}
+  .cinfo .row:nth-child(2) .ico{background:var(--yellow)}
+  .cinfo b{color:var(--cream);display:block;font-size:.95rem}
+  .cinfo span{color:var(--muted);font-size:.85rem}
+  .form{background:var(--bg-2);border:1px solid var(--line);border-radius:var(--radius-lg);padding:32px}
+  .form .field{margin-bottom:15px}
+  .form label{display:block;font-size:.74rem;color:var(--text-2);margin-bottom:6px;font-family:var(--mono);letter-spacing:.06em;text-transform:uppercase}
+  .form input,.form select,.form textarea{width:100%;padding:13px 15px;border:1.5px solid var(--line);border-radius:11px;font-family:inherit;font-size:.95rem;background:var(--bg-3);color:var(--text);transition:.25s}
+  .form input::placeholder,.form textarea::placeholder{color:#555}
+  .form input:focus,.form select:focus,.form textarea:focus{outline:none;border-color:var(--yellow)}
+  .form .two{display:grid;grid-template-columns:1fr 1fr;gap:13px}
+  .form textarea{resize:vertical;min-height:96px}
+  .form .btn{width:100%;justify-content:center;margin-top:4px}
+  .form-success{display:none;text-align:center;padding:30px 8px}
+  .form-success.show{display:block}
+  .form-success .check{width:60px;height:60px;border-radius:50%;background:var(--green);color:#000;display:flex;align-items:center;justify-content:center;font-size:1.9rem;margin:0 auto 16px;font-weight:700}
+  .form-success h3{font-size:1.4rem;margin-bottom:7px}
+  .form-success p{color:var(--text-2);font-size:.93rem}
+
+  /* FOOTER */
+  footer{border-top:1px solid var(--line);padding:44px 0 34px}
+  .foot{display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap}
+  .foot .links{display:flex;gap:24px;font-size:.9rem;color:var(--text-2);flex-wrap:wrap}
+  .foot .links a:hover{color:var(--cream)}
+  .foot-bottom{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-top:26px;padding-top:22px;border-top:1px solid var(--line);color:var(--muted);font-size:.82rem}
+  .color-bar{display:flex;height:4px;border-radius:2px;overflow:hidden;width:80px}
+  .color-bar span{flex:1}
+  .color-bar span:nth-child(1){background:var(--green)}
+  .color-bar span:nth-child(2){background:var(--yellow)}
+  .color-bar span:nth-child(3){background:var(--red)}
+  .color-bar span:nth-child(4){background:var(--blue)}
+
+  @media(max-width:900px){
+    .feature-grid{grid-template-columns:1fr}
+    .proc-grid{grid-template-columns:1fr}
+    .contact-grid{grid-template-columns:1fr;gap:34px}
+    .tabpanel{padding:26px}
+    .nav-links{position:fixed;top:92px;left:0;right:0;background:var(--bg);flex-direction:column;align-items:stretch;padding:24px;gap:18px;border-bottom:1px solid var(--line);transform:translateY(-160%);transition:.4s var(--ease)}
+    .nav-links.open{transform:none}
+    .hamburger{display:flex}
+    .form .two{grid-template-columns:1fr}
+  }
+</style>
+
+<!-- NAV -->
+<header id="header">
+  <div class="wrap">
+    <nav>
+      <a href="#top" aria-label="ZET8 home"><img class="brand-img" src="data:image/png;base64,__LOGO_B64__" alt="ZET8"></a>
+      <div class="nav-links" id="navLinks">
+        <a href="#products" class="lnk">Products</a>
+        <a href="#why" class="lnk">Why ZET8</a>
+        <a href="#contact" class="btn btn-primary">Get in touch <span class="arrow">→</span></a>
+      </div>
+      <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+    </nav>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero" id="top">
+  <div class="wrap hero-inner">
+    <img class="hero-logo reveal" src="data:image/png;base64,__LOGO_B64__" alt="ZET8 — tech solutions for businesses">
+    <h1 class="reveal d1">Ready-to-use <span class="w1">apps</span> that <span class="w2">run</span> your <span class="w3">small</span> <span class="w4">business</span>.</h1>
+    <p class="sub reveal d2">No custom builds, no six-month projects. ZET8 makes finished software products — workforce management, back office, sales, local deals, and on-demand hiring. Sign up and start today.</p>
+    <div class="hero-cta reveal d3">
+      <a href="#products" class="btn btn-primary">See the apps <span class="arrow">→</span></a>
+      <a href="#contact" class="btn btn-ghost">Talk to us</a>
+    </div>
+    <div class="hero-meta reveal d4">
+      <span>Ready today</span><span>Free trials</span><span>Mobile-first</span><span>AI built in</span>
+    </div>
+  </div>
+</section>
+
+<!-- PRODUCTS -->
+<section id="products">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="eyebrow mono"><span class="dot" style="background:var(--yellow)"></span>Products</div>
+      <h2>Five apps. One job: <span class="w2">run the business better.</span></h2>
+      <p>Finished products — built, shipped, and run by ZET8. Sign up and use them today.</p>
+    </div>
+
+    <div class="tabbar reveal" role="tablist" aria-label="ZET8 products">
+      <button class="t-ponchi" role="tab" id="tab-ponchi" aria-controls="panel-ponchi" aria-selected="true"><span class="dot"></span>Ponchi <small>ponchi.app</small></button>
+      <button class="t-desko" role="tab" id="tab-desko" aria-controls="panel-desko" aria-selected="false" tabindex="-1"><span class="dot"></span>Deskomigo <small>deskomigo.com</small></button>
+      <button class="t-crm" role="tab" id="tab-crm" aria-controls="panel-crm" aria-selected="false" tabindex="-1"><span class="dot"></span>Zet8 CRM <small>crm.zet8.com</small></button>
+      <button class="t-local" role="tab" id="tab-local" aria-controls="panel-local" aria-selected="false" tabindex="-1"><span class="dot"></span>LocalSave <small>localsave.com</small></button>
+      <button class="t-onsms" role="tab" id="tab-onsms" aria-controls="panel-onsms" aria-selected="false" tabindex="-1"><span class="dot"></span>OnSMS <small>onsms.com</small></button>
+    </div>
+
+    <div class="tabpanel reveal" id="panel-ponchi" role="tabpanel" aria-labelledby="tab-ponchi">
+      <div class="panel-top">
+        <div><span class="tag">Workforce</span><h3>Ponchi — <b>workforce management made simple.</b></h3></div>
+        <a class="panel-domain" href="https://ponchi.app" target="_blank" rel="noopener">ponchi.app ↗</a>
+      </div>
+      <p class="about">Time clock, scheduling, and payroll-ready reports for hourly and on-site teams — restaurants, retail, construction, healthcare, salons. Every punch honest, every shift covered.</p>
+      <div class="feature-grid">
+        <div class="feature"><b>Verified clock-in</b><span>GPS and photo verification on every punch stops time theft before it starts.</span></div>
+        <div class="feature"><b>Shift scheduling</b><span>Build schedules in minutes; swaps and time-off requests handled in-app.</span></div>
+        <div class="feature"><b>Payroll-ready exports</b><span>Hours land clean and export-ready for whatever payroll you already use.</span></div>
+        <div class="feature"><b>Live labor costs</b><span>See labor cost in real time — before the week ends, not after.</span></div>
+        <div class="feature"><b>Kiosk mode</b><span>One shared tablet clocks in the whole crew at the door.</span></div>
+        <div class="feature"><b>English + Español</b><span>Fully bilingual, with team messaging and recognition built in.</span></div>
+      </div>
+      <div class="panel-foot">
+        <span class="panel-meta">From $9.99/mo · 14-day free trial · no card required</span>
+        <a class="panel-cta" href="https://ponchi.app" target="_blank" rel="noopener">Visit ponchi.app <span class="arrow">→</span></a>
+      </div>
+    </div>
+
+    <div class="tabpanel reveal" id="panel-desko" role="tabpanel" aria-labelledby="tab-desko" hidden>
+      <div class="panel-top">
+        <div><span class="tag">Back office</span><h3>Deskomigo — <b>your office assistant, in your pocket.</b></h3></div>
+        <a class="panel-domain" href="https://deskomigo.com" target="_blank" rel="noopener">deskomigo.com ↗</a>
+      </div>
+      <p class="about">The back office for service pros — plumbers, electricians, HVAC, cleaners, landscapers. Invoices, payments, bookings, receipts, and an AI assistant, so the paperwork gets done from the truck.</p>
+      <div class="feature-grid">
+        <div class="feature"><b>Get paid on the spot</b><span>Tap to Pay, payment links, or manual entry — collect before you leave the driveway.</span></div>
+        <div class="feature"><b>Invoices &amp; quotes</b><span>Professional invoices and quotes generated in seconds, not evenings.</span></div>
+        <div class="feature"><b>AI receipt scanning</b><span>Snap a receipt; vendor, amount, tax, and category extracted automatically.</span></div>
+        <div class="feature"><b>Bookings &amp; deposits</b><span>Customers book online and pay deposits, so no-shows cost them, not you.</span></div>
+        <div class="feature"><b>Team &amp; permissions</b><span>Up to 5 users on Crew, each with exactly the access they should have.</span></div>
+        <div class="feature"><b>Contracts &amp; e-sign</b><span>Digital contracts signed on the customer's phone, stored with the job.</span></div>
+      </div>
+      <div class="panel-foot">
+        <span class="panel-meta">From $29.99/mo · 14-day free trial · no card required</span>
+        <a class="panel-cta" href="https://deskomigo.com" target="_blank" rel="noopener">Visit deskomigo.com <span class="arrow">→</span></a>
+      </div>
+    </div>
+
+    <div class="tabpanel reveal" id="panel-crm" role="tabpanel" aria-labelledby="tab-crm" hidden>
+      <div class="panel-top">
+        <div><span class="tag">Sales</span><h3>Zet8 CRM — <b>the CRM that gets out of your way.</b></h3></div>
+        <a class="panel-domain" href="https://crm.zet8.com" target="_blank" rel="noopener">crm.zet8.com ↗</a>
+      </div>
+      <p class="about">A streamlined CRM for small sales teams. Deals, contacts, and follow-ups in one clutter-free workspace — no feature bloat, no hidden per-feature costs, no six-week onboarding.</p>
+      <div class="feature-grid">
+        <div class="feature"><b>Visual pipeline</b><span>Drag deals across stages you define. See what's stuck and what's closing.</span></div>
+        <div class="feature"><b>One customer record</b><span>Contacts, deals, and every conversation in a single timeline.</span></div>
+        <div class="feature"><b>Smart follow-ups</b><span>Your dashboard tells you who to call today, so leads stop going cold.</span></div>
+        <div class="feature"><b>Team workspace</b><span>Assign deals, thread conversations, and keep the whole team on the same page.</span></div>
+        <div class="feature"><b>No bloat</b><span>Everything included at one price — no per-feature upsells.</span></div>
+        <div class="feature"><b>Cancel anytime</b><span>Month-to-month billing. Stay because it works, not because you're locked in.</span></div>
+      </div>
+      <div class="panel-foot">
+        <span class="panel-meta">$14.99/user/mo · 14-day free trial</span>
+        <a class="panel-cta" href="https://crm.zet8.com" target="_blank" rel="noopener">Visit crm.zet8.com <span class="arrow">→</span></a>
+      </div>
+    </div>
+
+    <div class="tabpanel reveal" id="panel-local" role="tabpanel" aria-labelledby="tab-local" hidden>
+      <div class="panel-top">
+        <div><span class="tag">Local commerce</span><h3>LocalSave — <b>local deals, local customers.</b></h3></div>
+        <a class="panel-domain" href="https://localsave.com" target="_blank" rel="noopener">localsave.com ↗</a>
+      </div>
+      <p class="about">A hyperlocal deals platform that connects neighborhood businesses with shoppers nearby. Merchants publish deals from a simple dashboard; customers discover and redeem them from the app.</p>
+      <div class="feature-grid">
+        <div class="feature"><b>Deals near you</b><span>Shoppers see offers from businesses in their own neighborhood, not national chains.</span></div>
+        <div class="feature"><b>Merchant dashboard</b><span>Publish a deal in minutes and track views and redemptions as they happen.</span></div>
+        <div class="feature"><b>Mobile app</b><span>Customers browse, save, and redeem deals straight from their phone.</span></div>
+        <div class="feature"><b>English + Español</b><span>Fully bilingual for merchants and shoppers alike.</span></div>
+        <div class="feature"><b>Free to start</b><span>Merchants list their business for free and upgrade only when it's working.</span></div>
+        <div class="feature"><b>Built for main street</b><span>Restaurants, salons, shops, services — the businesses that make a neighborhood.</span></div>
+      </div>
+      <div class="panel-foot">
+        <span class="panel-meta">Free for merchants to start · $14.99/mo to grow</span>
+        <a class="panel-cta" href="https://localsave.com" target="_blank" rel="noopener">Visit localsave.com <span class="arrow">→</span></a>
+      </div>
+    </div>
+
+    <div class="tabpanel reveal" id="panel-onsms" role="tabpanel" aria-labelledby="tab-onsms" hidden>
+      <div class="panel-top">
+        <div><span class="tag">Hiring</span><h3>OnSMS — <b>text a job. Get offers. Pick one.</b></h3></div>
+        <a class="panel-domain" href="https://onsms.com" target="_blank" rel="noopener">onsms.com ↗</a>
+      </div>
+      <p class="about">Text-based hiring for businesses and homeowners who need workers now — shift coverage, cleaning, moving, construction, and more. Describe the job in a text, get sealed price offers from available workers, and pick one. Usually matched the same day.</p>
+      <div class="feature-grid">
+        <div class="feature"><b>Text a job</b><span>Describe what you need in one message. Matching starts within minutes.</span></div>
+        <div class="feature"><b>Sealed offers</b><span>Available workers reply with their price. Compare offers and pick the best.</span></div>
+        <div class="feature"><b>No app required</b><span>Workers respond over plain SMS — no downloads, no sign-up friction.</span></div>
+        <div class="feature"><b>Same-day matching</b><span>Emergency staffing and shift coverage typically filled the same day.</span></div>
+        <div class="feature"><b>Workers keep 100%</b><span>Direct payment, no wage markup. Workers set their own rates.</span></div>
+        <div class="feature"><b>English + Español</b><span>Fully bilingual for employers and workers.</span></div>
+      </div>
+      <div class="panel-foot">
+        <span class="panel-meta">First 2 hires free · then $15 per confirmed hire</span>
+        <a class="panel-cta" href="https://onsms.com" target="_blank" rel="noopener">Visit onsms.com <span class="arrow">→</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHY ZET8 -->
+<section id="why">
+  <div class="wrap">
+    <div class="sec-head reveal" style="margin-bottom:36px">
+      <div class="eyebrow mono"><span class="dot" style="background:var(--red)"></span>Why ZET8</div>
+      <h2>Finished software. <span class="w3">No projects, no waiting.</span></h2>
+    </div>
+    <div class="proc-grid">
+      <div class="proc-card reveal d1"><div class="proc-n">01 / Ready today</div><h4>Sign up, not scope out.</h4><p>Every ZET8 app is a finished product with a free trial. No quotes, no six-month builds — create an account and start working.</p></div>
+      <div class="proc-card reveal d2"><div class="proc-n">02 / Built for small business</div><h4>Priced like tools, not platforms.</h4><p>Designed for owners with fifty jobs on the board, not fifty people in IT. Simple monthly pricing, cancel anytime.</p></div>
+      <div class="proc-card reveal d3"><div class="proc-n">03 / One family</div><h4>Apps that work the same way.</h4><p>Mobile-first, bilingual, AI where it erases busywork. Learn one ZET8 app and the next one already feels familiar.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="wrap">
+    <div class="contact-grid">
+      <div class="reveal">
+        <div class="eyebrow mono"><span class="dot" style="background:var(--blue)"></span>Get in touch</div>
+        <h2>Questions? <span class="w4">Talk to a person.</span></h2>
+        <p class="lead">Not sure which app fits your business, want a demo, or need help getting set up? Write to us — a person answers.</p>
+        <div class="cinfo">
+          <div class="row"><div class="ico">✉</div><div><b>hello@zet8.com</b><span>Reply within 1 business day</span></div></div>
+          <div class="row"><div class="ico">◎</div><div><b>Houston, Texas</b><span>Remote-first · EN &amp; ES</span></div></div>
+        </div>
+      </div>
+      <div class="reveal d1">
+        <div class="form">
+          <form id="quoteForm">
+            <div class="field"><label for="name">Name</label><input type="text" id="name" required placeholder="Jane Smith"></div>
+            <div class="two">
+              <div class="field"><label for="biz">Company</label><input type="text" id="biz" placeholder="Acme Inc."></div>
+              <div class="field"><label for="email">Email</label><input type="email" id="email" required placeholder="jane@company.com"></div>
+            </div>
+            <div class="field"><label for="need">What you need</label>
+              <select id="need">
+                <option>Ponchi — workforce management</option>
+                <option>Deskomigo — back office app</option>
+                <option>Zet8 CRM — sales pipeline</option>
+                <option>LocalSave — local deals</option>
+                <option>OnSMS — on-demand hiring</option>
+                <option>Not sure — need advice</option>
+              </select>
+            </div>
+            <div class="field"><label for="msg">Tell us about it</label><textarea id="msg" placeholder="What problem are you solving? Who'll use it? Any deadlines?"></textarea></div>
+            <button type="submit" class="btn btn-primary">Send <span class="arrow">→</span></button>
+          </form>
+          <div class="form-success" id="formSuccess">
+            <div class="check">✓</div><h3>Message ready.</h3>
+            <p>Your email app should open with everything filled in. Hit send — we'll reply within one business day.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div class="links">
+        <a href="https://ponchi.app" target="_blank" rel="noopener">Ponchi</a>
+        <a href="https://deskomigo.com" target="_blank" rel="noopener">Deskomigo</a>
+        <a href="https://crm.zet8.com" target="_blank" rel="noopener">Zet8 CRM</a>
+        <a href="https://localsave.com" target="_blank" rel="noopener">LocalSave</a>
+        <a href="https://onsms.com" target="_blank" rel="noopener">OnSMS</a>
+        <a href="#contact">Contact</a>
+      </div>
+      <div class="color-bar"><span></span><span></span><span></span><span></span></div>
+    </div>
+    <div class="foot-bottom"><span>© 2026 ZET8 · all rights reserved</span><span>zet8.com</span></div>
+  </div>
+</footer>
+
+<script>
+  (function () {
+    var header = document.getElementById('header');
+    window.addEventListener('scroll', function () { header.classList.toggle('scrolled', window.scrollY > 20); });
+
+    var ham = document.getElementById('hamburger'), links = document.getElementById('navLinks');
+    ham.addEventListener('click', function () { links.classList.toggle('open'); });
+    links.querySelectorAll('a').forEach(function (a) { a.addEventListener('click', function () { links.classList.remove('open'); }); });
+
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+    }, { threshold: .1 });
+    document.querySelectorAll('.reveal').forEach(function (el) { io.observe(el); });
+
+    var tabs = Array.prototype.slice.call(document.querySelectorAll('[role="tab"]'));
+    function select(tab, focus) {
+      tabs.forEach(function (t) {
+        var on = t === tab;
+        t.setAttribute('aria-selected', on ? 'true' : 'false');
+        t.tabIndex = on ? 0 : -1;
+        document.getElementById(t.getAttribute('aria-controls')).hidden = !on;
+      });
+      if (focus) tab.focus();
+    }
+    tabs.forEach(function (t, i) {
+      t.addEventListener('click', function () { select(t, false); });
+      t.addEventListener('keydown', function (e) {
+        var next = null;
+        if (e.key === 'ArrowRight') next = tabs[(i + 1) % tabs.length];
+        if (e.key === 'ArrowLeft') next = tabs[(i - 1 + tabs.length) % tabs.length];
+        if (e.key === 'Home') next = tabs[0];
+        if (e.key === 'End') next = tabs[tabs.length - 1];
+        if (next) { e.preventDefault(); select(next, true); }
+      });
+    });
+
+    document.getElementById('quoteForm').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var v = function (id) { return document.getElementById(id).value.trim(); };
+      var subject = encodeURIComponent('ZET8 — ' + (v('need') || 'New inquiry'));
+      var body = encodeURIComponent('Name: ' + v('name') + '\nCompany: ' + v('biz') + '\nEmail: ' + v('email') + '\nNeed: ' + v('need') + '\n\nDetails:\n' + v('msg'));
+      window.location.href = 'mailto:hello@zet8.com?subject=' + subject + '&body=' + body;
+      this.style.display = 'none';
+      document.getElementById('formSuccess').classList.add('show');
+    });
+  })();
+</script>
