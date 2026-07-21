@@ -406,7 +406,8 @@ def head(title, desc, path):
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="icon" href="data:image/svg+xml,%%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%%3E%%3Crect width='32' height='32' fill='%%23000'/%%3E%%3Cpath d='M6 8h20L6 24h20' fill='none' stroke='%%23F4C82D' stroke-width='4'/%%3E%%3C/svg%%3E">
+<link rel="icon" type="image/png" href="/favicon-8.png">
+<link rel="apple-touch-icon" href="/favicon-8.png">
 <meta property="og:type" content="website">
 <meta property="og:title" content="%(title)s">
 <meta property="og:description" content="%(desc)s">
@@ -652,7 +653,7 @@ NOTFOUND = """
 
 
 def main():
-    with open(os.path.join(HERE, "logo-wide.png"), "rb") as f:
+    with open(os.path.join(HERE, "logo-wide-transparent-clean.png"), "rb") as f:
         logo_b64 = base64.b64encode(f.read()).decode("ascii")
 
     def write(rel, html):
