@@ -28,11 +28,11 @@
   "name": "ZET8",
   "url": "https://zet8.com",
   "logo": "https://zet8.com/logo.png",
-  "description": "ZET8 makes finished, ready-to-use apps for small businesses — Ponchi workforce management, Deskomigo mobile back office, Zet8 CRM, LocalSave local deals, and OnSMS text-based hiring.",
+  "description": "ZET8 makes finished, ready-to-use apps for small businesses — Ponchi workforce management, Deskomigo mobile back office, Zet8 CRM, LocalSave local deals, OnSMS text-based hiring, and Initor business launch.",
   "email": "hello@zet8.com",
   "address": {"@type": "PostalAddress","addressLocality": "Houston","addressRegion": "TX","addressCountry": "US"},
   "parentOrganization": {"@type": "Organization","name": "Optima Buildsolutions LLC"},
-  "sameAs": ["https://ponchi.app","https://deskomigo.com","https://crm.zet8.com","https://localsave.com","https://onsms.com"]
+  "sameAs": ["https://ponchi.app","https://deskomigo.com","https://crm.zet8.com","https://localsave.com","https://onsms.com","https://initor.com"]
 }
 </script>
 <style>
@@ -183,7 +183,7 @@
   .price-row .p b{color:var(--hue)}
 
   .family h2{font-size:clamp(1.6rem,3.5vw,2.4rem);margin-bottom:30px}
-  .mini-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+  .mini-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px}
   .mini{background:var(--bg-2);border:1px solid var(--line);border-radius:var(--radius);padding:20px;transition:.3s var(--ease)}
   .mini:hover{border-color:var(--hue);transform:translateY(-3px)}
   .mini b{display:flex;align-items:center;gap:9px;font-family:var(--disp);font-weight:600;color:var(--cream);font-size:1.02rem;margin-bottom:5px}
@@ -259,7 +259,7 @@
       <div class="nav-links" id="navLinks">
         <div class="dd" id="dd">
           <button class="dd-btn" id="ddBtn" aria-haspopup="true">Products <span class="caret">▼</span></button>
-          <div class="dd-menu"><a class="hue-yellow" href="/ponchi/"><span class="dot"></span>Ponchi<small>ponchi.app</small></a><a class="hue-green" href="/deskomigo/"><span class="dot"></span>Deskomigo<small>deskomigo.com</small></a><a class="hue-blue" href="/crm/"><span class="dot"></span>Zet8 CRM<small>crm.zet8.com</small></a><a class="hue-red" href="/localsave/"><span class="dot"></span>LocalSave<small>localsave.com</small></a><a class="hue-green" href="/onsms/"><span class="dot"></span>OnSMS<small>onsms.com</small></a></div>
+          <div class="dd-menu"><a class="hue-yellow" href="/ponchi/"><span class="dot"></span>Ponchi<small>ponchi.app</small></a><a class="hue-green" href="/deskomigo/"><span class="dot"></span>Deskomigo<small>deskomigo.com</small></a><a class="hue-blue" href="/crm/"><span class="dot"></span>Zet8 CRM<small>crm.zet8.com</small></a><a class="hue-red" href="/localsave/"><span class="dot"></span>LocalSave<small>localsave.com</small></a><a class="hue-green" href="/onsms/"><span class="dot"></span>OnSMS<small>onsms.com</small></a><a class="hue-blue" href="/initor/"><span class="dot"></span>Initor<small>initor.com</small></a></div>
         </div>
         <a href="/about/" class="lnk">About Us</a>
         <a href="/contact/" class="btn btn-primary">Contact Us</a>
@@ -300,6 +300,7 @@
                 <option>Zet8 CRM — sales pipeline</option>
                 <option>LocalSave — local deals</option>
                 <option>OnSMS — on-demand hiring</option>
+                <option>Initor — business launch</option>
                 <option>Not sure — need advice</option>
               </select>
             </div>
@@ -319,7 +320,7 @@
 <footer>
   <div class="wrap">
     <div class="foot">
-      <div class="links"><a href="/ponchi/">Ponchi</a><a href="/deskomigo/">Deskomigo</a><a href="/crm/">Zet8 CRM</a><a href="/localsave/">LocalSave</a><a href="/onsms/">OnSMS</a><a href="/about/">About Us</a><a href="/contact/">Contact Us</a></div>
+      <div class="links"><a href="/ponchi/">Ponchi</a><a href="/deskomigo/">Deskomigo</a><a href="/crm/">Zet8 CRM</a><a href="/localsave/">LocalSave</a><a href="/onsms/">OnSMS</a><a href="/initor/">Initor</a><a href="/about/">About Us</a><a href="/contact/">Contact Us</a></div>
       <div class="color-bar"><span></span><span></span><span></span><span></span></div>
     </div>
     <div class="foot-bottom"><span>© 2026 ZET8 · all rights reserved</span><span>Houston, Texas · zet8.com</span></div>

@@ -99,6 +99,22 @@ PRODUCTS = [
         ],
         "pricing": "First 2 hires free · then $15 per confirmed hire",
     },
+    {
+        "slug": "initor", "name": "Initor", "hue": "blue", "cat": "Business launch",
+        "domain": "initor.com", "url": "https://initor.com",
+        "tagline": "Start your business in hours.",
+        "card": "Describe your idea once — get your name, logo, plans, website, and business card in one click.",
+        "about": "An AI business launcher. Describe your idea in one short paragraph and Initor generates your whole business at once — name, logo, business plan, marketing plan, website, and business card — with LLC filing and EIN on the way. From idea to assets in about two minutes.",
+        "features": [
+            ("Name & logo", "Brandable name ideas checked against live domain availability, plus a clean transparent-PNG logo in 5 style directions."),
+            ("Real plans, not templates", "A 9-section business plan and an 8-section marketing plan grounded in your idea — downloadable as PDF or Word, fully editable."),
+            ("A live website", "A professional one-page site generated and hosted for you. Edit any section with AI help and connect your own domain."),
+            ("Business card", "A matching business card design generated with the rest of your brand."),
+            ("LLC & EIN — coming soon", "File your company in Texas, Delaware, or Wyoming with the EIN handled, so your new business is a real, registered company."),
+            ("You own everything", "Plans, logo, website content, and your domain are yours outright — in English or Español."),
+        ],
+        "pricing": "Free to start · no credit card to try",
+    },
 ]
 
 # ---------------------------------------------------------------------- css
@@ -250,7 +266,7 @@ CSS = """
   .price-row .p b{color:var(--hue)}
 
   .family h2{font-size:clamp(1.6rem,3.5vw,2.4rem);margin-bottom:30px}
-  .mini-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+  .mini-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px}
   .mini{background:var(--bg-2);border:1px solid var(--line);border-radius:var(--radius);padding:20px;transition:.3s var(--ease)}
   .mini:hover{border-color:var(--hue);transform:translateY(-3px)}
   .mini b{display:flex;align-items:center;gap:9px;font-family:var(--disp);font-weight:600;color:var(--cream);font-size:1.02rem;margin-bottom:5px}
@@ -426,11 +442,11 @@ def head(title, desc, path):
   "name": "ZET8",
   "url": "%(site)s",
   "logo": "%(site)s/logo.png",
-  "description": "ZET8 makes finished, ready-to-use apps for small businesses — Ponchi workforce management, Deskomigo mobile back office, Zet8 CRM, LocalSave local deals, and OnSMS text-based hiring.",
+  "description": "ZET8 makes finished, ready-to-use apps for small businesses — Ponchi workforce management, Deskomigo mobile back office, Zet8 CRM, LocalSave local deals, OnSMS text-based hiring, and Initor business launch.",
   "email": "hello@zet8.com",
   "address": {"@type": "PostalAddress","addressLocality": "Houston","addressRegion": "TX","addressCountry": "US"},
   "parentOrganization": {"@type": "Organization","name": "Optima Buildsolutions LLC"},
-  "sameAs": ["https://ponchi.app","https://deskomigo.com","https://crm.zet8.com","https://localsave.com","https://onsms.com"]
+  "sameAs": ["https://ponchi.app","https://deskomigo.com","https://crm.zet8.com","https://localsave.com","https://onsms.com","https://initor.com"]
 }
 </script>
 <style>%(css)s</style>
@@ -459,7 +475,7 @@ def home_content(logo_b64):
   <div class="wrap hero-inner">
     <img class="hero-logo reveal" src="data:image/png;base64,%s" alt="ZET8 — tech solutions for businesses">
     <h1 class="reveal d1">Ready-to-use apps that run your small business.</h1>
-    <p class="sub reveal d2">No custom builds, no six-month projects. ZET8 makes finished software products — workforce management, back office, sales, local deals, and on-demand hiring. Sign up and start today.</p>
+    <p class="sub reveal d2">No custom builds, no six-month projects. ZET8 makes finished software products — workforce management, back office, sales, local deals, on-demand hiring, and business launch. Sign up and start today.</p>
     <div class="hero-cta reveal d3">
       <a href="#products" class="btn btn-primary">See the apps <span class="arrow">→</span></a>
       <a href="/about/" class="btn btn-ghost">About ZET8</a>
@@ -474,7 +490,7 @@ def home_content(logo_b64):
   <div class="wrap">
     <div class="sec-head reveal">
       <div class="eyebrow mono"><span class="dot" style="background:var(--yellow)"></span>Products</div>
-      <h2>Five apps. One job: run the business better.</h2>
+      <h2>Six apps. One job: run the business better.</h2>
       <p>Finished products — built, shipped, and run by ZET8. Pick one and start today.</p>
     </div>
     <div class="cards">%s</div>
@@ -579,7 +595,7 @@ ABOUT = """
 <section class="family" style="padding-top:0">
   <div class="wrap">
     <h2 class="reveal">The ZET8 family</h2>
-    <div class="mini-cards" style="grid-template-columns:repeat(5,1fr)">@@MINIS@@</div>
+    <div class="mini-cards">@@MINIS@@</div>
   </div>
 </section>
 <section class="cta-band">
@@ -623,6 +639,7 @@ CONTACT = """
                 <option>Zet8 CRM — sales pipeline</option>
                 <option>LocalSave — local deals</option>
                 <option>OnSMS — on-demand hiring</option>
+                <option>Initor — business launch</option>
                 <option>Not sure — need advice</option>
               </select>
             </div>
@@ -664,7 +681,7 @@ def main():
 
     # home
     home = page("ZET8 — Tech Solutions for Businesses",
-                "ZET8 makes finished, ready-to-use apps for small businesses — Ponchi workforce management, Deskomigo mobile back office, Zet8 CRM, LocalSave local deals, and OnSMS text-based hiring.",
+                "ZET8 makes finished, ready-to-use apps for small businesses — Ponchi workforce management, Deskomigo mobile back office, Zet8 CRM, LocalSave local deals, OnSMS text-based hiring, and Initor business launch.",
                 "/", home_content(logo_b64), logo_b64)
     write("index.html", home)
 
