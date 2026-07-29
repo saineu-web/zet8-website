@@ -208,8 +208,7 @@ CSS = """
   .scard-center .eyebrow2{justify-content:center}
   .scard-center p{max-width:52ch;margin-inline:auto}
   .scard-center .meta{justify-content:center}
-  .swordmark{font-family:var(--disp);font-weight:700;font-size:clamp(64px,15vw,170px);line-height:.85;letter-spacing:-.03em;color:var(--cream)}
-  .swordmark span{color:var(--yellow)}
+  .swordmark-img{width:min(520px,78vw);height:auto;display:block;margin:0 auto;filter:drop-shadow(0 24px 60px rgba(0,0,0,.6))}
   .cue{margin-top:38px;font-family:var(--mono);font-size:.66rem;letter-spacing:.26em;text-transform:uppercase;color:var(--muted)}
   .cue i{display:inline-block;animation:drift 2.4s ease-in-out infinite;font-style:normal}
   @keyframes drift{0%,100%{transform:translateY(0);opacity:.5}50%{transform:translateY(5px);opacity:1}}
@@ -496,7 +495,7 @@ PUNCH = {
 }
 
 
-def home_content():
+def home_content(logo_b64):
     import json
     scards = "".join("""
   <section class="scard hue-%s" data-step="%d">
@@ -521,7 +520,7 @@ def home_content():
 <div class="stage" id="stage">
   <section class="scard scard-center on" data-step="0">
     <div class="eyebrow2">One account · Six products</div>
-    <div class="swordmark">ZET<span>8</span></div>
+    <img class="swordmark-img" src="data:image/png;base64,%s" alt="ZET8">
     <p style="margin-top:26px">Ready-to-use apps for the businesses that actually run a city — the crews, the counters, the routes, and the people who own them.</p>
     <div class="cue">Scroll to travel the eight <i>↓</i></div>
   </section>
@@ -595,7 +594,7 @@ def home_content():
 
 <script>window.ZET8_PRODUCTS = %s;</script>
 <script defer src="/assets/scene.js"></script>""" % (
-        scards, len(PRODUCTS) + 1, outro_links, len(PRODUCTS),
+        logo_b64, scards, len(PRODUCTS) + 1, outro_links, len(PRODUCTS),
         "<div></div>" * (len(PRODUCTS) + 2), minis, data)
 
 
@@ -762,7 +761,7 @@ def main():
     # home
     home = page("ZET8 — Tech Solutions for Businesses",
                 "ZET8 makes finished, ready-to-use apps for small businesses — Ponchi workforce management, Deskomigo mobile back office, Zet8 CRM, LocalSave local deals, OnSMS text-based hiring, and Initor business launch.",
-                "/", home_content(), logo_b64)
+                "/", home_content(logo_b64), logo_b64)
     write("index.html", home)
 
     # product pages
