@@ -206,6 +206,7 @@ CSS = """
   .stage{display:none;position:fixed;inset:0;z-index:4;pointer-events:none}
   .runway{display:none;position:relative;z-index:2}
   .runway div{height:100vh}
+  @supports(height:100svh){.runway div{height:100svh}}
   .hud,.minimap,.srail{display:none}
   .scene-on #scene,.scene-on .vignette,.scene-on .stage,.scene-on .runway,.scene-on .minimap,.scene-on .srail{display:block}
   .scene-on .hud{display:flex}
@@ -352,7 +353,7 @@ CSS = """
 
   @media(max-width:900px){
     .scard{top:auto;bottom:112px;transform:none;left:24px;right:24px;width:auto}
-    .scard-center{left:50%;bottom:auto;top:50%;transform:translate(-50%,-50%)}
+    .scard-center{left:50%;right:auto;bottom:auto;top:50%;transform:translate(-50%,-50%);width:min(720px,86vw)}
     .scard p{max-width:none}
     .minimap{display:none!important}
     .proc-grid,.feature-grid{grid-template-columns:1fr}
@@ -782,10 +783,12 @@ NOTFOUND = """
 
 
 def main():
+    import hashlib
     with open(os.path.join(HERE, "logo-wide-transparent-clean.png"), "rb") as f:
         logo_b64 = base64.b64encode(f.read()).decode("ascii")
     with open(os.path.join(HERE, "assets", "scene.js"), encoding="utf-8") as f:
         scene_src = f.read()
+    scene_v = hashlib.md5(scene_src.encode("utf-8")).hexdigest()[:8]
 
     def write(rel, html):
         path = os.path.join(HERE, rel.replace("/", os.sep))
@@ -793,10 +796,12 @@ def main():
         io.open(path, "w", encoding="utf-8").write(html)
         print("wrote", rel, "(%d bytes)" % len(html))
 
-    # home
+    # home (script URL carries a content hash so deploys bust browser caches)
     home = page("ZET8 — Tech Solutions for Businesses",
                 "ZET8 makes finished, ready-to-use apps for small businesses — Ponchi workforce management, Deskomigo mobile back office, Zet8 CRM, LocalSave local deals, OnSMS text-based hiring, and Initor business launch.",
                 "/", home_content(logo_b64), logo_b64)
+    home = home.replace('<script defer src="/assets/scene.js"></script>',
+                        '<script defer src="/assets/scene.js?v=%s"></script>' % scene_v)
     write("index.html", home)
 
     # product pages
@@ -833,7 +838,7 @@ def main():
 
     # artifact preview: home page with absolute links so navigation works from the
     # preview, and the 3D script inlined (the artifact CSP blocks external scripts)
-    preview = home.replace('<script defer src="/assets/scene.js"></script>',
+    preview = home.replace('<script defer src="/assets/scene.js?v=%s"></script>' % scene_v,
                            "<script>\n" + scene_src + "\n</script>")
     write("artifact-preview.html", preview.replace('href="/', 'href="%s/' % SITE).replace('href="%s/#' % SITE, 'href="#'))
 

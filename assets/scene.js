@@ -292,20 +292,26 @@
   }
 
   /* --------------------------------------------------------- the nodes -- */
-  var screenQuad = quad(15, 18.75, 0);
-  var backQuad = quad(16, 19.75, -0.25);
+  // Portrait screens get half-size panels, floated above the text card and
+  // pulled toward the track center so they stay fully in frame.
+  var NARROW = window.innerWidth < 860;
+  var PS = NARROW ? 0.5 : 1;
+  var SIDE_OFF = NARROW ? 2.6 : 13;
+  var UP_OFF = NARROW ? 6.0 : 2.5;
+  var screenQuad = quad(15 * PS, 18.75 * PS, 0);
+  var backQuad = quad(16 * PS, 19.75 * PS, -0.25);
   var nodes = products.map(function (p, i) {
     var anchor = (i + 1) / (STEPS - 1);
     var u = Math.min(anchor * 0.965 + 0.012 + 0.032, 1);
     var base = curveAt(u), tan = tangentAt(u);
     var side = norm(cross(tan, UP));
-    var center = add(add(base, scl(side, 13)), scl(UP, 2.5));
+    var center = add(add(base, scl(side, SIDE_OFF)), scl(UP, UP_OFF));
     var node = {
       center: center,
       seed: i * 1.7,
       hex: p.hex,
       rgb: hexRGB(p.hex),
-      ring: ringLines(center, 11.5, Math.PI / 2.3),
+      ring: ringLines(center, NARROW ? 5.8 : 11.5, Math.PI / 2.3),
       tex: textureFrom(drawPanel(p))
     };
     return node;

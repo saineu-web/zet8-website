@@ -106,6 +106,7 @@
   .stage{display:none;position:fixed;inset:0;z-index:4;pointer-events:none}
   .runway{display:none;position:relative;z-index:2}
   .runway div{height:100vh}
+  @supports(height:100svh){.runway div{height:100svh}}
   .hud,.minimap,.srail{display:none}
   .scene-on #scene,.scene-on .vignette,.scene-on .stage,.scene-on .runway,.scene-on .minimap,.scene-on .srail{display:block}
   .scene-on .hud{display:flex}
@@ -252,7 +253,7 @@
 
   @media(max-width:900px){
     .scard{top:auto;bottom:112px;transform:none;left:24px;right:24px;width:auto}
-    .scard-center{left:50%;bottom:auto;top:50%;transform:translate(-50%,-50%)}
+    .scard-center{left:50%;right:auto;bottom:auto;top:50%;transform:translate(-50%,-50%);width:min(720px,86vw)}
     .scard p{max-width:none}
     .minimap{display:none!important}
     .proc-grid,.feature-grid{grid-template-columns:1fr}
@@ -411,7 +412,7 @@
 </div>
 
 <script>window.ZET8_PRODUCTS = [{"name": "OnSMS", "cat": "Hiring", "tagline": "Text a job. Get offers. Pick one.", "pricing": "First 2 hires free \u00b7 then $15 per confirmed hire", "domain": "onsms.com", "url": "https://onsms.com", "hex": "#3CB371", "features": ["Text a job", "Sealed offers", "No app required"]}, {"name": "Initor", "cat": "Business launch", "tagline": "Start your business in hours.", "pricing": "Free to start \u00b7 no credit card to try", "domain": "initor.com", "url": "https://initor.com", "hex": "#5468E8", "features": ["Name & logo", "Real plans, not templates", "A live website"]}, {"name": "LocalSave", "cat": "Local commerce", "tagline": "Local deals, local customers.", "pricing": "Free for merchants to start \u00b7 $14.99/mo to grow", "domain": "localsave.com", "url": "https://localsave.com", "hex": "#E84A38", "features": ["Deals near you", "Merchant dashboard", "Mobile app"]}, {"name": "Ponchi", "cat": "Workforce", "tagline": "Workforce management made simple.", "pricing": "From $9.99/mo \u00b7 14-day free trial \u00b7 no card required", "domain": "ponchi.app", "url": "https://ponchi.app", "hex": "#F4C82D", "features": ["Verified clock-in", "Shift scheduling", "Payroll-ready exports"]}, {"name": "Deskomigo", "cat": "Back office", "tagline": "Your office assistant, in your pocket.", "pricing": "From $29.99/mo \u00b7 14-day free trial \u00b7 no card required", "domain": "deskomigo.com", "url": "https://deskomigo.com", "hex": "#3CB371", "features": ["Get paid on the spot", "Invoices & quotes", "AI receipt scanning"]}, {"name": "Zet8 CRM", "cat": "Sales", "tagline": "The CRM that gets out of your way.", "pricing": "$14.99/user/mo \u00b7 14-day free trial", "domain": "crm.zet8.com", "url": "https://crm.zet8.com", "hex": "#5468E8", "features": ["Visual pipeline", "One customer record", "Smart follow-ups"]}, {"name": "Luuky", "cat": "Coming soon", "tagline": "Something new from ZET8.", "pricing": "Coming soon", "domain": "coming soon", "url": "https://luuky.com", "hex": "#E84A38", "features": ["Under wraps", "Built the ZET8 way", "Be first to know"]}];</script>
-<script defer src="/assets/scene.js"></script>
+<script defer src="/assets/scene.js?v=f5f35fd6"></script>
 <footer>
   <div class="wrap">
     <div class="foot">
