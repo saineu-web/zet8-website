@@ -181,32 +181,52 @@ CSS = """
   .hamburger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:8px}
   .hamburger span{width:24px;height:2px;background:var(--cream);border-radius:2px}
 
-  /* HERO (home) — two-column stage: copy left, 3D mark right */
-  .hero{padding:150px 0 90px;position:relative;overflow:hidden}
-  .hero::before,.hero::after{content:"";position:absolute;border-radius:50%;filter:blur(80px);opacity:.12;z-index:0;pointer-events:none}
-  .hero::before{width:520px;height:520px;background:var(--green);top:-140px;left:-120px}
-  .hero::after{width:560px;height:560px;background:var(--blue);bottom:-240px;right:-140px}
-  .hero-inner{position:relative;z-index:1;display:grid;grid-template-columns:1.05fr .95fr;gap:44px;align-items:center}
-  .hero h1{font-size:clamp(2.1rem,4.6vw,3.8rem);margin:16px 0 0}
-  .hero .sub{font-size:1.1rem;color:var(--text-2);max-width:540px;margin:22px 0 32px;line-height:1.55}
-  .hero-cta{display:flex;gap:13px;flex-wrap:wrap}
-  .hero-meta{margin-top:42px;display:flex;gap:28px;flex-wrap:wrap;font-family:var(--mono);font-size:.76rem;color:var(--muted);letter-spacing:.06em}
-  /* 3D stage: canvas swaps in over the static mark when WebGL is available */
-  .hero-stage{position:relative;width:100%;max-width:560px;aspect-ratio:7/5;justify-self:center}
-  .hero-stage canvas{position:absolute;inset:0;width:100%;height:100%;display:none}
-  .hero-stage .mark-fallback{position:absolute;inset:12%;width:76%;height:76%;object-fit:contain;margin:auto;filter:drop-shadow(0 30px 60px rgba(0,0,0,.55))}
-  .hero-stage.has-3d canvas{display:block}
-  .hero-stage.has-3d .mark-fallback{display:none}
-  /* one-time light sweep across the headline */
-  .sheen{background-image:linear-gradient(100deg,var(--cream) 42%,#ffffff 50%,var(--cream) 58%);background-size:280% 100%;background-position:120% 0;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:sheen 1.9s ease-out .5s forwards}
-  @keyframes sheen{to{background-position:-80% 0}}
-  @media(prefers-reduced-motion:reduce){.sheen{animation:none;background:none;-webkit-text-fill-color:var(--cream)}}
-  .hero-meta span{display:flex;align-items:center;gap:8px}
-  .hero-meta span::before{content:"";width:8px;height:8px;border-radius:2px;display:inline-block}
-  .hero-meta span:nth-child(1)::before{background:var(--green)}
-  .hero-meta span:nth-child(2)::before{background:var(--yellow)}
-  .hero-meta span:nth-child(3)::before{background:var(--red)}
-  .hero-meta span:nth-child(4)::before{background:var(--blue)}
+  /* SCROLL SCENE (home) — camera journey along the "8". All scene chrome is
+     hidden unless JS enables it via html.scene-on; no-WebGL / reduced-motion
+     visitors get the static .scene-fallback hero instead. */
+  #scene{position:fixed;inset:0;width:100%;height:100%;display:none;z-index:0}
+  .vignette{display:none;position:fixed;inset:0;z-index:1;pointer-events:none;background:radial-gradient(ellipse at 62% 50%,transparent 30%,rgba(0,0,0,.72) 78%,#000 100%)}
+  .stage{display:none;position:fixed;inset:0;z-index:4;pointer-events:none}
+  .runway{display:none;position:relative;z-index:2}
+  .runway div{height:100vh}
+  .hud,.minimap,.srail{display:none}
+  .scene-on #scene,.scene-on .vignette,.scene-on .stage,.scene-on .runway,.scene-on .minimap,.scene-on .srail{display:block}
+  .scene-on .hud{display:flex}
+  .scene-on .scene-fallback{display:none}
+  .scard{position:absolute;top:50%;left:clamp(20px,7vw,88px);transform:translateY(-50%);width:min(460px,78vw);opacity:0;visibility:hidden}
+  .scard.on{visibility:visible}
+  .scard .eyebrow2{font-family:var(--mono);font-size:.66rem;letter-spacing:.26em;text-transform:uppercase;color:var(--hue,var(--yellow));margin-bottom:18px;display:flex;gap:12px;align-items:center}
+  .scard .eyebrow2::before{content:"";width:26px;height:1px;background:var(--hue,var(--yellow));display:block;flex:none}
+  .scard h2{font-family:var(--disp);font-weight:700;font-size:clamp(34px,5vw,56px);line-height:1;letter-spacing:-.02em;margin-bottom:16px;color:var(--cream)}
+  .scard h2 em{font-style:normal;color:var(--hue,var(--yellow))}
+  .scard p{font-size:.95rem;line-height:1.65;color:var(--text-2);max-width:40ch}
+  .scard .meta{margin-top:22px;font-family:var(--mono);font-size:.66rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);display:flex;gap:14px;flex-wrap:wrap;align-items:center}
+  .scard .meta a{color:var(--cream);text-decoration:none;border-bottom:1px solid var(--hue,var(--yellow));padding-bottom:2px;pointer-events:auto}
+  .scard .meta a:hover{color:var(--hue,var(--yellow))}
+  .badge2{border:1px solid var(--line-2);padding:4px 9px;color:var(--muted)}
+  .scard-center{left:50%;transform:translate(-50%,-50%);text-align:center;width:min(720px,86vw)}
+  .scard-center .eyebrow2{justify-content:center}
+  .scard-center p{max-width:52ch;margin-inline:auto}
+  .scard-center .meta{justify-content:center}
+  .swordmark{font-family:var(--disp);font-weight:700;font-size:clamp(64px,15vw,170px);line-height:.85;letter-spacing:-.03em;color:var(--cream)}
+  .swordmark span{color:var(--yellow)}
+  .cue{margin-top:38px;font-family:var(--mono);font-size:.66rem;letter-spacing:.26em;text-transform:uppercase;color:var(--muted)}
+  .cue i{display:inline-block;animation:drift 2.4s ease-in-out infinite;font-style:normal}
+  @keyframes drift{0%,100%{transform:translateY(0);opacity:.5}50%{transform:translateY(5px);opacity:1}}
+  .slinks{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:30px}
+  .slinks a{pointer-events:auto;text-decoration:none;font-family:var(--mono);font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--cream);border:1px solid var(--line-2);padding:11px 16px;transition:.2s}
+  .slinks a:hover{border-color:var(--yellow);color:var(--yellow)}
+  .hud{position:fixed;left:clamp(20px,5vw,54px);bottom:34px;z-index:5;font-family:var(--mono);font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);pointer-events:none;gap:18px;align-items:baseline}
+  .hud b{color:var(--yellow);font-weight:500}
+  .minimap{position:fixed;right:clamp(20px,5vw,54px);bottom:26px;z-index:5;pointer-events:none;opacity:.9}
+  .minimap svg{display:block;overflow:visible}
+  .minimap .track{fill:none;stroke:rgba(244,200,45,.25);stroke-width:1}
+  .minimap .dot{fill:var(--yellow)}
+  .srail{position:fixed;left:0;bottom:0;height:2px;width:100%;z-index:5;background:rgba(244,241,234,.08)}
+  .srail i{display:block;height:100%;width:0;background:var(--yellow);box-shadow:0 0 12px var(--yellow)}
+  .scene-done .hud,.scene-done .minimap,.scene-done .srail{opacity:0;transition:opacity .5s}
+  .after-scene{position:relative;z-index:6;background:var(--bg)}
+  footer{position:relative;z-index:6;background:var(--bg)}
 
   .reveal{opacity:0;transform:translateY(26px);transition:.8s var(--ease)}
   .reveal.in{opacity:1;transform:none}
@@ -219,22 +239,8 @@ CSS = """
   .eyebrow{display:inline-flex;align-items:center;gap:10px}
   .eyebrow .dot{width:9px;height:9px;border-radius:50%;display:inline-block}
 
-  /* PRODUCT CARDS (home) */
+  /* PRODUCTS strip (home, after the scene) */
   #products{background:var(--bg-2);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
-  .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;perspective:1100px}
-  .card{background:var(--bg);border:1px solid var(--line);border-radius:var(--radius);padding:28px;display:flex;flex-direction:column;gap:12px;position:relative;overflow:hidden;transform:rotateX(var(--tx,0deg)) rotateY(var(--ty,0deg)) translateY(var(--lift,0px));transition:transform .25s var(--ease),border-color .25s var(--ease);will-change:transform}
-  .card::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:var(--hue);opacity:.85}
-  .card::after{content:"";position:absolute;inset:0;background:radial-gradient(420px circle at var(--gx,50%) var(--gy,50%),var(--hue-soft),transparent 65%);opacity:0;transition:opacity .35s;pointer-events:none}
-  .card:hover{--lift:-4px;border-color:var(--hue)}
-  .card:hover::after{opacity:1}
-  .card>*{position:relative;z-index:1}
-  .card .tag{align-self:flex-start;font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;padding:5px 10px;border-radius:5px;color:var(--hue);background:var(--hue-soft)}
-  .card h3{font-size:1.45rem}
-  .card p{color:var(--text-2);font-size:.94rem;flex:1}
-  .card .go{display:inline-flex;align-items:center;gap:8px;font-weight:600;font-size:.92rem;color:var(--hue)}
-  .card .go .arrow{transition:.25s}
-  .card:hover .go .arrow{transform:translateX(4px)}
-  .card small.dom{font-family:var(--mono);font-size:.68rem;color:var(--muted);letter-spacing:.04em}
 
   /* WHY strip */
   #why{padding:88px 0}
@@ -329,10 +335,11 @@ CSS = """
   .color-bar span:nth-child(4){background:var(--blue)}
 
   @media(max-width:900px){
-    .hero{padding:130px 0 70px}
-    .hero-inner{grid-template-columns:1fr;gap:10px}
-    .hero-stage{order:-1;max-width:340px;aspect-ratio:7/5}
-    .cards,.proc-grid,.feature-grid{grid-template-columns:1fr}
+    .scard{top:auto;bottom:112px;transform:none;left:24px;right:24px;width:auto}
+    .scard-center{left:50%;bottom:auto;top:50%;transform:translate(-50%,-50%)}
+    .scard p{max-width:none}
+    .minimap{display:none!important}
+    .proc-grid,.feature-grid{grid-template-columns:1fr}
     .mini-cards{grid-template-columns:1fr 1fr}
     .contact-grid{grid-template-columns:1fr;gap:34px}
     .nav-links{position:fixed;top:88px;left:0;right:0;background:var(--bg);flex-direction:column;align-items:stretch;padding:24px;gap:18px;border-bottom:1px solid var(--line);transform:translateY(-160%);transition:.4s var(--ease)}
@@ -368,24 +375,6 @@ JS = """
       es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
     }, { threshold: .1 });
     document.querySelectorAll('.reveal').forEach(function (el) { io.observe(el); });
-
-    // depth tilt + light-following glow on product cards (pointer devices only)
-    if (window.matchMedia('(hover: hover) and (prefers-reduced-motion: no-preference)').matches) {
-      document.querySelectorAll('.card').forEach(function (card) {
-        card.addEventListener('pointermove', function (e) {
-          var r = card.getBoundingClientRect();
-          var nx = (e.clientX - r.left) / r.width, ny = (e.clientY - r.top) / r.height;
-          card.style.setProperty('--ty', ((nx - 0.5) * 7).toFixed(2) + 'deg');
-          card.style.setProperty('--tx', ((0.5 - ny) * 6).toFixed(2) + 'deg');
-          card.style.setProperty('--gx', (nx * 100).toFixed(1) + '%');
-          card.style.setProperty('--gy', (ny * 100).toFixed(1) + '%');
-        });
-        card.addEventListener('pointerleave', function () {
-          card.style.setProperty('--tx', '0deg');
-          card.style.setProperty('--ty', '0deg');
-        });
-      });
-    }
   })();
 """
 
@@ -494,71 +483,120 @@ def page(title, desc, path, content, logo_b64, current="", extra_js=""):
 
 
 # ----------------------------------------------------------------- home page
-def home_content(mark_b64):
-    cards = "".join("""
-      <a class="card hue-%s reveal" href="/%s/">
-        <span class="tag">%s</span>
-        <h3>%s</h3>
-        <p>%s</p>
-        <span class="go">Learn more <span class="arrow">→</span></span>
-        <small class="dom">%s</small>
-      </a>""" % (p["hue"], p["slug"], p["cat"], p["name"], p["card"], p["domain"]) for p in PRODUCTS)
+HUE_HEX = {"green": "#3CB371", "yellow": "#F4C82D", "red": "#E84A38", "blue": "#5468E8"}
+
+# Scene-card headlines: one punchy line per stop, <em> takes the product hue.
+PUNCH = {
+    "ponchi":    "Clock in from<br>the <em>job site</em>.",
+    "deskomigo": "Run the back office<br>from the <em>truck</em>.",
+    "crm":       "A CRM that gets<br><em>out of the way</em>.",
+    "localsave": "Deals from the shop<br><em>down the street</em>.",
+    "onsms":     "Post a job by<br><em>text message</em>.",
+    "initor":    "Start the company<br><em>this week</em>.",
+}
+
+
+def home_content():
+    import json
+    scards = "".join("""
+  <section class="scard hue-%s" data-step="%d">
+    <div class="eyebrow2">%s · %s</div>
+    <h2>%s</h2>
+    <p>%s</p>
+    <div class="meta"><span class="badge2">%s</span><a href="%s" target="_blank" rel="noopener">%s</a></div>
+  </section>""" % (p["hue"], i + 1, p["name"], p["cat"], PUNCH[p["slug"]], p["card"],
+                   p["pricing"], p["url"], p["domain"]) for i, p in enumerate(PRODUCTS))
+    outro_links = "".join('<a href="/%s/">%s</a>' % (p["slug"], p["name"]) for p in PRODUCTS)
+    minis = "".join('<a class="mini hue-%s" href="/%s/"><b>%s</b><span>%s</span></a>'
+                    % (p["hue"], p["slug"], p["name"], p["cat"]) for p in PRODUCTS)
+    data = json.dumps([{
+        "name": p["name"], "cat": p["cat"], "tagline": p["tagline"],
+        "pricing": p["pricing"], "domain": p["domain"], "url": p["url"],
+        "hex": HUE_HEX[p["hue"]], "features": [f[0] for f in p["features"][:3]],
+    } for p in PRODUCTS])
     return """
-<section class="hero">
-  <div class="wrap hero-inner">
-    <div>
-      <div class="eyebrow mono reveal"><span class="dot" style="background:var(--yellow)"></span>Tech solutions for businesses</div>
-      <h1 class="sheen reveal d1">Ready-to-use apps that run your small business.</h1>
-      <p class="sub reveal d2">No custom builds, no six-month projects. ZET8 makes finished software products — workforce management, back office, sales, local deals, on-demand hiring, and business launch. Sign up and start today.</p>
-      <div class="hero-cta reveal d3">
-        <a href="#products" class="btn btn-primary">See the apps <span class="arrow">→</span></a>
-        <a href="/about/" class="btn btn-ghost">About ZET8</a>
+<canvas id="scene" aria-hidden="true"></canvas>
+<div class="vignette"></div>
+
+<div class="stage" id="stage">
+  <section class="scard scard-center on" data-step="0">
+    <div class="eyebrow2">One account · Six products</div>
+    <div class="swordmark">ZET<span>8</span></div>
+    <p style="margin-top:26px">Ready-to-use apps for the businesses that actually run a city — the crews, the counters, the routes, and the people who own them.</p>
+    <div class="cue">Scroll to travel the eight <i>↓</i></div>
+  </section>
+%s
+  <section class="scard scard-center" data-step="%d">
+    <div class="eyebrow2">End of track</div>
+    <h2>Six apps.<br>One <em>operating layer</em>.</h2>
+    <p>Finished software, built in Houston for owner-operators — in the two languages this city runs on.</p>
+    <div class="slinks">%s<a href="#products">Keep scrolling ↓</a></div>
+  </section>
+</div>
+
+<div class="hud">
+  <span>Track <b id="hudU">0.000</b></span>
+  <span>Node <b id="hudN">00</b>/0%d</span>
+</div>
+<div class="minimap">
+  <svg width="86" height="46" viewBox="0 0 86 46">
+    <path id="mmPath" class="track"></path>
+    <circle id="mmDot" class="dot" r="2.6" cx="0" cy="0"></circle>
+  </svg>
+</div>
+<div class="srail"><i id="railFill"></i></div>
+
+<main class="runway" id="top">%s</main>
+
+<div class="scene-fallback">
+  <section class="page-hero">
+    <div class="wrap">
+      <div class="eyebrow mono"><span class="dot" style="background:var(--yellow)"></span>Tech solutions for businesses</div>
+      <h1>Ready-to-use apps that run your small business.</h1>
+      <p class="lead">No custom builds, no six-month projects. ZET8 makes finished software products — sign up and start today.</p>
+    </div>
+  </section>
+</div>
+
+<div class="after-scene">
+  <section id="products">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <div class="eyebrow mono"><span class="dot" style="background:var(--yellow)"></span>The lineup</div>
+        <h2>Six apps. One job: run the business better.</h2>
+        <p>Finished products — built, shipped, and run by ZET8. Pick one and start today.</p>
       </div>
-      <div class="hero-meta reveal d4">
-        <span>Ready today</span><span>Free trials</span><span>Mobile-first</span><span>AI built in</span>
+      <div class="mini-cards">%s</div>
+    </div>
+  </section>
+
+  <section id="why">
+    <div class="wrap">
+      <div class="sec-head reveal" style="margin-bottom:36px">
+        <div class="eyebrow mono"><span class="dot" style="background:var(--red)"></span>Why ZET8</div>
+        <h2>Finished software. No projects, no waiting.</h2>
+      </div>
+      <div class="proc-grid">
+        <div class="proc-card reveal d1"><div class="proc-n">01 / Ready today</div><h4>Sign up, not scope out.</h4><p>Every ZET8 app is a finished product with a free trial. No quotes, no six-month builds — create an account and start working.</p></div>
+        <div class="proc-card reveal d2"><div class="proc-n">02 / Built for small business</div><h4>Priced like tools, not platforms.</h4><p>Designed for owners with fifty jobs on the board, not fifty people in IT. Simple monthly pricing, cancel anytime.</p></div>
+        <div class="proc-card reveal d3"><div class="proc-n">03 / One family</div><h4>Apps that work the same way.</h4><p>Mobile-first, bilingual, AI where it erases busywork. Learn one ZET8 app and the next one already feels familiar.</p></div>
       </div>
     </div>
-    <div class="hero-stage reveal d1">
-      <canvas id="hero3d" aria-hidden="true"></canvas>
-      <img class="mark-fallback" src="data:image/png;base64,%s" alt="ZET8 mark">
-    </div>
-  </div>
-</section>
-<script defer src="/assets/hero3d.js"></script>
+  </section>
 
-<section id="products">
-  <div class="wrap">
-    <div class="sec-head reveal">
-      <div class="eyebrow mono"><span class="dot" style="background:var(--yellow)"></span>Products</div>
-      <h2>Six apps. One job: run the business better.</h2>
-      <p>Finished products — built, shipped, and run by ZET8. Pick one and start today.</p>
+  <section class="cta-band">
+    <div class="wrap reveal">
+      <h2>Not sure which app fits?</h2>
+      <p>Tell us how your business runs and we'll point you to the right tool — a person answers.</p>
+      <a href="/contact/" class="btn btn-primary">Contact us <span class="arrow">→</span></a>
     </div>
-    <div class="cards">%s</div>
-  </div>
-</section>
+  </section>
+</div>
 
-<section id="why">
-  <div class="wrap">
-    <div class="sec-head reveal" style="margin-bottom:36px">
-      <div class="eyebrow mono"><span class="dot" style="background:var(--red)"></span>Why ZET8</div>
-      <h2>Finished software. No projects, no waiting.</h2>
-    </div>
-    <div class="proc-grid">
-      <div class="proc-card reveal d1"><div class="proc-n">01 / Ready today</div><h4>Sign up, not scope out.</h4><p>Every ZET8 app is a finished product with a free trial. No quotes, no six-month builds — create an account and start working.</p></div>
-      <div class="proc-card reveal d2"><div class="proc-n">02 / Built for small business</div><h4>Priced like tools, not platforms.</h4><p>Designed for owners with fifty jobs on the board, not fifty people in IT. Simple monthly pricing, cancel anytime.</p></div>
-      <div class="proc-card reveal d3"><div class="proc-n">03 / One family</div><h4>Apps that work the same way.</h4><p>Mobile-first, bilingual, AI where it erases busywork. Learn one ZET8 app and the next one already feels familiar.</p></div>
-    </div>
-  </div>
-</section>
-
-<section class="cta-band">
-  <div class="wrap reveal">
-    <h2>Not sure which app fits?</h2>
-    <p>Tell us how your business runs and we'll point you to the right tool — a person answers.</p>
-    <a href="/contact/" class="btn btn-primary">Contact us <span class="arrow">→</span></a>
-  </div>
-</section>
-""" % (mark_b64, cards)
+<script>window.ZET8_PRODUCTS = %s;</script>
+<script defer src="/assets/scene.js"></script>""" % (
+        scards, len(PRODUCTS) + 1, outro_links, len(PRODUCTS),
+        "<div></div>" * (len(PRODUCTS) + 2), minis, data)
 
 
 # -------------------------------------------------------------- product pages
@@ -712,8 +750,8 @@ NOTFOUND = """
 def main():
     with open(os.path.join(HERE, "logo-wide-transparent-clean.png"), "rb") as f:
         logo_b64 = base64.b64encode(f.read()).decode("ascii")
-    with open(os.path.join(HERE, "assets", "hero3d.js"), encoding="utf-8") as f:
-        hero3d_src = f.read()
+    with open(os.path.join(HERE, "assets", "scene.js"), encoding="utf-8") as f:
+        scene_src = f.read()
 
     def write(rel, html):
         path = os.path.join(HERE, rel.replace("/", os.sep))
@@ -724,7 +762,7 @@ def main():
     # home
     home = page("ZET8 — Tech Solutions for Businesses",
                 "ZET8 makes finished, ready-to-use apps for small businesses — Ponchi workforce management, Deskomigo mobile back office, Zet8 CRM, LocalSave local deals, OnSMS text-based hiring, and Initor business launch.",
-                "/", home_content(logo_b64), logo_b64)
+                "/", home_content(), logo_b64)
     write("index.html", home)
 
     # product pages
@@ -761,8 +799,8 @@ def main():
 
     # artifact preview: home page with absolute links so navigation works from the
     # preview, and the 3D script inlined (the artifact CSP blocks external scripts)
-    preview = home.replace('<script defer src="/assets/hero3d.js"></script>',
-                           "<script>\n" + hero3d_src + "\n</script>")
+    preview = home.replace('<script defer src="/assets/scene.js"></script>',
+                           "<script>\n" + scene_src + "\n</script>")
     write("artifact-preview.html", preview.replace('href="/', 'href="%s/' % SITE).replace('href="%s/#' % SITE, 'href="#'))
 
 
