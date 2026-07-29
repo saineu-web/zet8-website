@@ -192,7 +192,7 @@ CSS = """
   .hero-cta{display:flex;gap:13px;flex-wrap:wrap}
   .hero-meta{margin-top:42px;display:flex;gap:28px;flex-wrap:wrap;font-family:var(--mono);font-size:.76rem;color:var(--muted);letter-spacing:.06em}
   /* 3D stage: canvas swaps in over the static mark when WebGL is available */
-  .hero-stage{position:relative;width:100%;max-width:480px;aspect-ratio:1/1;justify-self:center}
+  .hero-stage{position:relative;width:100%;max-width:560px;aspect-ratio:7/5;justify-self:center}
   .hero-stage canvas{position:absolute;inset:0;width:100%;height:100%;display:none}
   .hero-stage .mark-fallback{position:absolute;inset:12%;width:76%;height:76%;object-fit:contain;margin:auto;filter:drop-shadow(0 30px 60px rgba(0,0,0,.55))}
   .hero-stage.has-3d canvas{display:block}
@@ -331,7 +331,7 @@ CSS = """
   @media(max-width:900px){
     .hero{padding:130px 0 70px}
     .hero-inner{grid-template-columns:1fr;gap:10px}
-    .hero-stage{order:-1;max-width:300px;aspect-ratio:1/1}
+    .hero-stage{order:-1;max-width:340px;aspect-ratio:7/5}
     .cards,.proc-grid,.feature-grid{grid-template-columns:1fr}
     .mini-cards{grid-template-columns:1fr 1fr}
     .contact-grid{grid-template-columns:1fr;gap:34px}
@@ -494,7 +494,7 @@ def page(title, desc, path, content, logo_b64, current="", extra_js=""):
 
 
 # ----------------------------------------------------------------- home page
-def home_content(eight_b64):
+def home_content(mark_b64):
     cards = "".join("""
       <a class="card hue-%s reveal" href="/%s/">
         <span class="tag">%s</span>
@@ -558,7 +558,7 @@ def home_content(eight_b64):
     <a href="/contact/" class="btn btn-primary">Contact us <span class="arrow">→</span></a>
   </div>
 </section>
-""" % (eight_b64, cards)
+""" % (mark_b64, cards)
 
 
 # -------------------------------------------------------------- product pages
@@ -712,8 +712,6 @@ NOTFOUND = """
 def main():
     with open(os.path.join(HERE, "logo-wide-transparent-clean.png"), "rb") as f:
         logo_b64 = base64.b64encode(f.read()).decode("ascii")
-    with open(os.path.join(HERE, "brand", "eight.png"), "rb") as f:
-        eight_b64 = base64.b64encode(f.read()).decode("ascii")
     with open(os.path.join(HERE, "assets", "hero3d.js"), encoding="utf-8") as f:
         hero3d_src = f.read()
 
@@ -726,7 +724,7 @@ def main():
     # home
     home = page("ZET8 — Tech Solutions for Businesses",
                 "ZET8 makes finished, ready-to-use apps for small businesses — Ponchi workforce management, Deskomigo mobile back office, Zet8 CRM, LocalSave local deals, OnSMS text-based hiring, and Initor business launch.",
-                "/", home_content(eight_b64), logo_b64)
+                "/", home_content(logo_b64), logo_b64)
     write("index.html", home)
 
     # product pages

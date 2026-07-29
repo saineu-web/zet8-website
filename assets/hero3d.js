@@ -1,7 +1,9 @@
 /* ============================================================================
-   ZET8 hero — the brand "8" as a 3D object.
-   Two tangent rings built from colored arc segments (green/yellow/red/blue),
-   Phong-lit, slowly oscillating, with pointer parallax.
+   ZET8 hero — the full brand mark ("ZET." + the segmented 8) as a 3D object.
+
+   - Letters: extruded 2D polygons (ear-clip triangulation), flat-shaded sides.
+   - The 8: two tangent rings built from colored torus arcs with rounded caps.
+   - Phong + rim lighting, slow oscillation, pointer parallax.
 
    Raw WebGL 1, zero dependencies. Progressive enhancement:
    - no WebGL, or prefers-reduced-motion  -> static PNG fallback stays visible
@@ -28,22 +30,51 @@
     red:    [232 / 255, 74 / 255, 56 / 255],
     blue:   [84 / 255, 104 / 255, 232 / 255]
   };
-  var RING_R = 0.72;   // ring (major) radius
-  var TUBE_R = 0.30;   // tube (minor) radius
-  var RING_CY = 0.94;  // ring center offset from group center (rings overlap a touch)
-  var RING_CZ = 0.16;  // depth offset so the rings interlock at the crossing
-  // Arc layout mirrors the logo: both rings cut along the same 45/225-degree
-  // diagonal, cool colors up top. Rounded end-caps extend each arc ~23 deg per
-  // side, so the 34-deg nominal gaps leave ~11 deg of visible daylight.
+  var CENTER_X = -0.88;  // recenters the whole "ZET.8" composition
+  var DEPTH = 0.55;      // letter extrusion depth
+
+  /* The 8 --------------------------------------------------------------- */
+  var RING_R = 0.78, TUBE_R = 0.32;
+  var RING_CY = 1.02;    // ring centers sit just past tangency
+  var RING_CZ = 0.16;    // depth offset so the rings interlock
+  var EIGHT_X = 4.25 + CENTER_X;
+  // Both rings cut along the 45/225-degree diagonal like the logo. Rounded
+  // caps extend each arc ~23 deg per side; 34-deg nominal gaps stay visible.
   var ARCS = [
     { cy: +RING_CY, cz: +RING_CZ, color: 'blue',   a0: 62,  a1: 208 },
     { cy: +RING_CY, cz: +RING_CZ, color: 'green',  a0: 242, a1: 388 },
     { cy: -RING_CY, cz: -RING_CZ, color: 'yellow', a0: 62,  a1: 208 },
     { cy: -RING_CY, cz: -RING_CZ, color: 'red',    a0: 242, a1: 388 }
   ];
-  var GROUP_SCALE = 0.92;
-  var GROUP_TILT_Z = -0.10;      // the logo's slight lean
-  var CAMERA_Z = 6.8;
+
+  /* The letters ---------------------------------------------------------- */
+  // Chunky angular Z / E / T outlines (x right, y up), baseline at y = 0.
+  var LETTER_Y = -1.55; // baseline offset within the composition
+  var SHAPES = [
+    { color: 'green', x: -3.60 + CENTER_X, pts: [       // Z
+        0, 2.35, 1.75, 2.35, 1.75, 1.75, 0.62, 0.60, 1.75, 0.60,
+        1.75, 0, 0, 0, 0, 0.60, 1.13, 1.75, 0, 1.75] },
+    { color: 'yellow', x: -1.55 + CENTER_X, pts: [      // E
+        0, 0, 1.55, 0, 1.55, 0.55, 0.55, 0.55, 0.55, 0.915,
+        1.42, 0.915, 1.42, 1.435, 0.55, 1.435, 0.55, 1.80,
+        1.55, 1.80, 1.55, 2.35, 0, 2.35] },
+    { color: 'red', x: 0.30 + CENTER_X, pts: [          // T
+        0, 2.35, 1.65, 2.35, 1.65, 1.75, 1.135, 1.75, 1.135, 0,
+        0.515, 0, 0.515, 1.75, 0, 1.75] },
+    { color: 'blue', x: 2.05 + CENTER_X, pts: (function () { // the dot "."
+        var p = [], N = 22, r = 0.30;
+        for (var i = 0; i < N; i++) {
+          var a = i / N * Math.PI * 2;
+          p.push(0.30 + r * Math.cos(a), 0.30 + r * Math.sin(a));
+        }
+        return p;
+      })() }
+  ];
+
+  /* Camera / motion ------------------------------------------------------ */
+  var GROUP_SCALE = 0.66;
+  var GROUP_TILT_Z = -0.04;
+  var CAMERA_Z = 8.4;
   var FOV = 35 * Math.PI / 180;
   var DPR_CAP = 2;
 
@@ -105,9 +136,23 @@
     uColor: gl.getUniformLocation(prog, 'uColor')
   };
 
-  /* ----------------------------------------------------------- geometry -- */
-  // Torus arc with rounded ends: the arc is extended a few extra rows while
-  // the tube radius eases to zero, producing capsule-like caps.
+  function makeBuffer(target, data) {
+    var b = gl.createBuffer();
+    gl.bindBuffer(target, b);
+    gl.bufferData(target, data, gl.STATIC_DRAW);
+    return b;
+  }
+  function finishMesh(color, pos, nor, idx) {
+    return {
+      color: COLORS[color],
+      count: idx.length,
+      vbo: makeBuffer(gl.ARRAY_BUFFER, new Float32Array(pos)),
+      nbo: makeBuffer(gl.ARRAY_BUFFER, new Float32Array(nor)),
+      ibo: makeBuffer(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(idx))
+    };
+  }
+
+  /* ------------------------------------------------ geometry: torus arcs -- */
   function buildArc(arc) {
     var U = 64, V = 22, CAP = 7;
     var capLen = (TUBE_R / RING_R) * 0.95;
@@ -126,7 +171,7 @@
         var phi = j / V * Math.PI * 2;
         var cp = Math.cos(phi), sp = Math.sin(phi);
         var nx = ca * cp, ny = sa * cp, nz = sp;
-        pos.push(RING_R * ca + TUBE_R * s * nx,
+        pos.push(RING_R * ca + TUBE_R * s * nx + EIGHT_X,
                  RING_R * sa + TUBE_R * s * ny + arc.cy,
                  TUBE_R * s * nz + arc.cz);
         nor.push(nx, ny, nz);
@@ -134,25 +179,89 @@
     }
     for (i = 0; i < rows.length - 1; i++) {
       for (j = 0; j < V; j++) {
-        var a2 = i * (V + 1) + j, b = a2 + V + 1;
-        idx.push(a2, b, a2 + 1, b, b + 1, a2 + 1);
+        var q = i * (V + 1) + j, b = q + V + 1;
+        idx.push(q, b, q + 1, b, b + 1, q + 1);
       }
     }
-    return {
-      color: COLORS[arc.color],
-      count: idx.length,
-      vbo: makeBuffer(gl.ARRAY_BUFFER, new Float32Array(pos)),
-      nbo: makeBuffer(gl.ARRAY_BUFFER, new Float32Array(nor)),
-      ibo: makeBuffer(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(idx))
-    };
+    return finishMesh(arc.color, pos, nor, idx);
   }
-  function makeBuffer(target, data) {
-    var b = gl.createBuffer();
-    gl.bindBuffer(target, b);
-    gl.bufferData(target, data, gl.STATIC_DRAW);
-    return b;
+
+  /* -------------------------------------- geometry: extruded 2D outlines -- */
+  function signedArea(p) {
+    var a = 0, n = p.length / 2;
+    for (var i = 0; i < n; i++) {
+      var j = (i + 1) % n;
+      a += p[2 * i] * p[2 * j + 1] - p[2 * j] * p[2 * i + 1];
+    }
+    return a / 2;
   }
-  var meshes = ARCS.map(buildArc);
+  function inTriangle(ax, ay, bx, by, cx, cy, px, py) {
+    var v0x = cx - ax, v0y = cy - ay, v1x = bx - ax, v1y = by - ay, v2x = px - ax, v2y = py - ay;
+    var d00 = v0x * v0x + v0y * v0y, d01 = v0x * v1x + v0y * v1y, d02 = v0x * v2x + v0y * v2y;
+    var d11 = v1x * v1x + v1y * v1y, d12 = v1x * v2x + v1y * v2y;
+    var inv = 1 / (d00 * d11 - d01 * d01);
+    var u = (d11 * d02 - d01 * d12) * inv, v = (d00 * d12 - d01 * d02) * inv;
+    return u >= 0 && v >= 0 && u + v < 1;
+  }
+  // Ear-clipping triangulation of a simple CCW polygon (flat [x,y,...] array).
+  function triangulate(p) {
+    var n = p.length / 2, V = [], i;
+    for (i = 0; i < n; i++) V.push(i);
+    var idx = [], guard = 2 * n, v = n - 1;
+    while (V.length > 2 && guard-- > 0) {
+      var u = v % V.length; v = (u + 1) % V.length; var w = (v + 1) % V.length;
+      var ax = p[2 * V[u]], ay = p[2 * V[u] + 1];
+      var bx = p[2 * V[v]], by = p[2 * V[v] + 1];
+      var cx = p[2 * V[w]], cy = p[2 * V[w] + 1];
+      var ear = ((bx - ax) * (cy - ay) - (by - ay) * (cx - ax)) > 1e-9;
+      if (ear) {
+        for (i = 0; i < V.length && ear; i++) {
+          if (i === u || i === v || i === w) continue;
+          if (inTriangle(ax, ay, bx, by, cx, cy, p[2 * V[i]], p[2 * V[i] + 1])) ear = false;
+        }
+      }
+      if (ear) {
+        idx.push(V[u], V[v], V[w]);
+        V.splice(v, 1);
+        guard = 2 * V.length;
+      }
+    }
+    return idx;
+  }
+  function buildExtruded(shape) {
+    var p = shape.pts.slice();
+    if (signedArea(p) < 0) { // normalize to CCW so side normals face outward
+      var r = [];
+      for (var q = p.length - 2; q >= 0; q -= 2) r.push(p[q], p[q + 1]);
+      p = r;
+    }
+    var n = p.length / 2, hd = DEPTH / 2, i, j;
+    var tris = triangulate(p);
+    var pos = [], nor = [], idx = [];
+
+    for (i = 0; i < n; i++) { pos.push(p[2 * i] + shape.x, p[2 * i + 1] + LETTER_Y, hd); nor.push(0, 0, 1); }
+    for (i = 0; i < n; i++) { pos.push(p[2 * i] + shape.x, p[2 * i + 1] + LETTER_Y, -hd); nor.push(0, 0, -1); }
+    for (i = 0; i < tris.length; i += 3) {
+      idx.push(tris[i], tris[i + 1], tris[i + 2]);                 // front
+      idx.push(n + tris[i], n + tris[i + 2], n + tris[i + 1]);     // back
+    }
+    for (i = 0; i < n; i++) {                                      // side walls
+      j = (i + 1) % n;
+      var dx = p[2 * j] - p[2 * i], dy = p[2 * j + 1] - p[2 * i + 1];
+      var len = Math.sqrt(dx * dx + dy * dy) || 1;
+      var nx = dy / len, ny = -dx / len;
+      var base = pos.length / 3;
+      pos.push(p[2 * i] + shape.x, p[2 * i + 1] + LETTER_Y, hd,
+               p[2 * j] + shape.x, p[2 * j + 1] + LETTER_Y, hd,
+               p[2 * j] + shape.x, p[2 * j + 1] + LETTER_Y, -hd,
+               p[2 * i] + shape.x, p[2 * i + 1] + LETTER_Y, -hd);
+      nor.push(nx, ny, 0, nx, ny, 0, nx, ny, 0, nx, ny, 0);
+      idx.push(base, base + 1, base + 2, base, base + 2, base + 3);
+    }
+    return finishMesh(shape.color, pos, nor, idx);
+  }
+
+  var meshes = ARCS.map(buildArc).concat(SHAPES.map(buildExtruded));
 
   /* ------------------------------------------------------- mat4 helpers -- */
   function identity() { return [1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1]; }
@@ -223,8 +332,8 @@
     px += (pointerX - px) * 0.055;
     py += (pointerY - py) * 0.055;
 
-    var ry = Math.sin(t * 0.24) * 0.5 + px * 0.38;
-    var rx = -0.16 + Math.sin(t * 0.15) * 0.05 + py * 0.22;
+    var ry = Math.sin(t * 0.22) * 0.30 + px * 0.28;
+    var rx = -0.14 + Math.sin(t * 0.15) * 0.04 + py * 0.18;
     var bob = Math.sin(t * 0.55) * 0.05;
 
     var model = multiply(translate(0, bob, 0),
@@ -232,7 +341,7 @@
                 multiply(rotY(ry),
                 multiply(rotX(rx), scaleM(GROUP_SCALE)))));
     var view = translate(0, 0, -CAMERA_Z);
-    var proj = perspective(FOV, canvas.width / Math.max(1, canvas.height), 0.1, 30);
+    var proj = perspective(FOV, canvas.width / Math.max(1, canvas.height), 0.1, 40);
     var mvp = multiply(proj, multiply(view, model));
 
     gl.uniformMatrix4fv(loc.uMVP, false, new Float32Array(mvp));
