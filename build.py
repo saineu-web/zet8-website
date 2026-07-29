@@ -115,7 +115,24 @@ PRODUCTS = [
         ],
         "pricing": "Free to start · no credit card to try",
     },
+    {
+        "slug": "luuky", "name": "Luuky", "hue": "red", "cat": "Coming soon",
+        "domain": "luuky.com", "url": "https://luuky.com", "soon": True,
+        "tagline": "Something new from ZET8.",
+        "card": "The next ZET8 product is in the works. Details soon.",
+        "about": "We're building the next member of the ZET8 family. What it does stays under wraps for now — but like everything we make, it'll be finished software a small business can just sign up for and use.",
+        "features": [
+            ("Under wraps", "We'll share what Luuky does closer to launch."),
+            ("Built the ZET8 way", "Finished, mobile-first, bilingual — like the rest of the family."),
+            ("Be first to know", "Write to us and we'll tell you the day it launches."),
+        ],
+        "pricing": "Coming soon",
+    },
 ]
+
+# Display order across the whole site (nav, scene stops, cards, sitemap).
+_ORDER = ["onsms", "initor", "localsave", "ponchi", "deskomigo", "crm", "luuky"]
+PRODUCTS.sort(key=lambda p: _ORDER.index(p["slug"]))
 
 # ---------------------------------------------------------------------- css
 CSS = """
@@ -393,7 +410,8 @@ FORM_JS = """
 def nav(logo_b64, current=""):
     items = "".join(
         '<a class="hue-%s" href="/%s/"><span class="dot"></span>%s<small>%s</small></a>'
-        % (p["hue"], p["slug"], p["name"], p["domain"]) for p in PRODUCTS
+        % (p["hue"], p["slug"], p["name"],
+           "coming soon" if p.get("soon") else p["domain"]) for p in PRODUCTS
     )
     def cur(page):
         return ' aria-current="page"' if current == page else ""
@@ -492,34 +510,42 @@ PUNCH = {
     "localsave": "Deals from the shop<br><em>down the street</em>.",
     "onsms":     "Post a job by<br><em>text message</em>.",
     "initor":    "Start the company<br><em>this week</em>.",
+    "luuky":     "Something new is<br><em>on the way</em>.",
 }
 
 
 def home_content(logo_b64):
     import json
+    live = sum(1 for p in PRODUCTS if not p.get("soon"))
+    live_word = {4: "Four", 5: "Five", 6: "Six", 7: "Seven", 8: "Eight", 9: "Nine"}[live]
     scards = "".join("""
   <section class="scard hue-%s" data-step="%d">
     <div class="eyebrow2">%s · %s</div>
     <h2>%s</h2>
     <p>%s</p>
-    <div class="meta"><span class="badge2">%s</span><a href="%s" target="_blank" rel="noopener">%s</a></div>
+    <div class="meta"><span class="badge2">%s</span>%s</div>
   </section>""" % (p["hue"], i + 1, p["name"], p["cat"], PUNCH[p["slug"]], p["card"],
-                   p["pricing"], p["url"], p["domain"]) for i, p in enumerate(PRODUCTS))
+                   p["pricing"],
+                   '<a href="/contact/">Get notified</a>' if p.get("soon") else
+                   '<a href="%s" target="_blank" rel="noopener">%s</a>' % (p["url"], p["domain"]))
+                     for i, p in enumerate(PRODUCTS))
     outro_links = "".join('<a href="/%s/">%s</a>' % (p["slug"], p["name"]) for p in PRODUCTS)
     minis = "".join('<a class="mini hue-%s" href="/%s/"><b>%s</b><span>%s</span></a>'
                     % (p["hue"], p["slug"], p["name"], p["cat"]) for p in PRODUCTS)
     data = json.dumps([{
         "name": p["name"], "cat": p["cat"], "tagline": p["tagline"],
-        "pricing": p["pricing"], "domain": p["domain"], "url": p["url"],
+        "pricing": p["pricing"],
+        "domain": "coming soon" if p.get("soon") else p["domain"],
+        "url": p["url"],
         "hex": HUE_HEX[p["hue"]], "features": [f[0] for f in p["features"][:3]],
     } for p in PRODUCTS])
-    return """
+    out = """
 <canvas id="scene" aria-hidden="true"></canvas>
 <div class="vignette"></div>
 
 <div class="stage" id="stage">
   <section class="scard scard-center on" data-step="0">
-    <div class="eyebrow2">One account · Six products</div>
+    <div class="eyebrow2">One account · @@COUNT@@ products</div>
     <img class="swordmark-img" src="data:image/png;base64,%s" alt="ZET8">
     <p style="margin-top:26px">Ready-to-use apps for the businesses that actually run a city — the crews, the counters, the routes, and the people who own them.</p>
     <div class="cue">Scroll to travel the eight <i>↓</i></div>
@@ -527,7 +553,7 @@ def home_content(logo_b64):
 %s
   <section class="scard scard-center" data-step="%d">
     <div class="eyebrow2">End of track</div>
-    <h2>Six apps.<br>One <em>operating layer</em>.</h2>
+    <h2>@@COUNT@@ apps.<br>One <em>operating layer</em>.</h2>
     <p>Finished software, built in Houston for owner-operators — in the two languages this city runs on.</p>
     <div class="slinks">%s<a href="#products">Keep scrolling ↓</a></div>
   </section>
@@ -562,8 +588,8 @@ def home_content(logo_b64):
     <div class="wrap">
       <div class="sec-head reveal">
         <div class="eyebrow mono"><span class="dot" style="background:var(--yellow)"></span>The lineup</div>
-        <h2>Six apps. One job: run the business better.</h2>
-        <p>Finished products — built, shipped, and run by ZET8. Pick one and start today.</p>
+        <h2>@@COUNT@@ apps. One job: run the business better.</h2>
+        <p>Finished products — built, shipped, and run by ZET8. Pick one and start today — plus one more on the way.</p>
       </div>
       <div class="mini-cards">%s</div>
     </div>
@@ -596,6 +622,7 @@ def home_content(logo_b64):
 <script defer src="/assets/scene.js"></script>""" % (
         logo_b64, scards, len(PRODUCTS) + 1, outro_links, len(PRODUCTS),
         "<div></div>" * (len(PRODUCTS) + 2), minis, data)
+    return out.replace("@@COUNT@@", live_word)
 
 
 # -------------------------------------------------------------- product pages
@@ -614,7 +641,7 @@ def product_content(p):
     <p class="tagline reveal d1">%(tagline)s</p>
     <p class="about reveal d2">%(about)s</p>
     <div class="cta-row reveal d3">
-      <a class="btn btn-hue" href="%(url)s" target="_blank" rel="noopener">Visit %(domain)s <span class="arrow">→</span></a>
+      %(cta_primary)s
       <a class="btn btn-ghost" href="/contact/">Ask a question</a>
     </div>
     <span class="dom reveal d4">%(pricing)s</span>
@@ -631,7 +658,7 @@ def product_content(p):
 <section class="price-strip">
   <div class="wrap price-row reveal">
     <span class="p">%(pricing_html)s</span>
-    <a class="btn btn-hue" href="%(url)s" target="_blank" rel="noopener">Get started <span class="arrow">→</span></a>
+    %(cta_strip)s
   </div>
 </section>
 
@@ -644,8 +671,16 @@ def product_content(p):
 </div>
 """ % {
         "hue": p["hue"], "name": p["name"], "cat": p["cat"], "tagline": p["tagline"],
-        "about": p["about"], "url": p["url"], "domain": p["domain"],
-        "pricing": p["pricing"], "pricing_html": p["pricing"].replace("·", "<b>·</b>"),
+        "about": p["about"], "pricing": p["pricing"],
+        "pricing_html": p["pricing"].replace("·", "<b>·</b>"),
+        "cta_primary": ('<a class="btn btn-hue" href="/contact/">Get notified <span class="arrow">→</span></a>'
+                        if p.get("soon") else
+                        '<a class="btn btn-hue" href="%s" target="_blank" rel="noopener">Visit %s <span class="arrow">→</span></a>'
+                        % (p["url"], p["domain"])),
+        "cta_strip": ('<a class="btn btn-hue" href="/contact/">Get notified <span class="arrow">→</span></a>'
+                      if p.get("soon") else
+                      '<a class="btn btn-hue" href="%s" target="_blank" rel="noopener">Get started <span class="arrow">→</span></a>'
+                      % p["url"]),
         "feats": feats, "minis": minis,
     }
 
