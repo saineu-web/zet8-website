@@ -181,17 +181,26 @@ CSS = """
   .hamburger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:8px}
   .hamburger span{width:24px;height:2px;background:var(--cream);border-radius:2px}
 
-  /* HERO (home) */
-  .hero{padding:150px 0 90px;position:relative;overflow:hidden;text-align:center}
+  /* HERO (home) — two-column stage: copy left, 3D mark right */
+  .hero{padding:150px 0 90px;position:relative;overflow:hidden}
   .hero::before,.hero::after{content:"";position:absolute;border-radius:50%;filter:blur(80px);opacity:.12;z-index:0;pointer-events:none}
   .hero::before{width:520px;height:520px;background:var(--green);top:-140px;left:-120px}
   .hero::after{width:560px;height:560px;background:var(--blue);bottom:-240px;right:-140px}
-  .hero-inner{position:relative;z-index:1}
-  .hero-logo{width:min(360px,68vw);height:auto;margin:0 auto 30px;display:block;filter:drop-shadow(0 30px 60px rgba(0,0,0,.55))}
-  .hero h1{font-size:clamp(2.1rem,5.5vw,4.2rem);max-width:820px;margin:0 auto}
-  .hero .sub{font-size:1.12rem;color:var(--text-2);max-width:580px;margin:24px auto 34px;line-height:1.55}
-  .hero-cta{display:flex;gap:13px;flex-wrap:wrap;justify-content:center}
-  .hero-meta{margin-top:44px;display:flex;justify-content:center;gap:30px;flex-wrap:wrap;font-family:var(--mono);font-size:.76rem;color:var(--muted);letter-spacing:.06em}
+  .hero-inner{position:relative;z-index:1;display:grid;grid-template-columns:1.05fr .95fr;gap:44px;align-items:center}
+  .hero h1{font-size:clamp(2.1rem,4.6vw,3.8rem);margin:16px 0 0}
+  .hero .sub{font-size:1.1rem;color:var(--text-2);max-width:540px;margin:22px 0 32px;line-height:1.55}
+  .hero-cta{display:flex;gap:13px;flex-wrap:wrap}
+  .hero-meta{margin-top:42px;display:flex;gap:28px;flex-wrap:wrap;font-family:var(--mono);font-size:.76rem;color:var(--muted);letter-spacing:.06em}
+  /* 3D stage: canvas swaps in over the static mark when WebGL is available */
+  .hero-stage{position:relative;width:100%;max-width:480px;aspect-ratio:1/1;justify-self:center}
+  .hero-stage canvas{position:absolute;inset:0;width:100%;height:100%;display:none}
+  .hero-stage .mark-fallback{position:absolute;inset:12%;width:76%;height:76%;object-fit:contain;margin:auto;filter:drop-shadow(0 30px 60px rgba(0,0,0,.55))}
+  .hero-stage.has-3d canvas{display:block}
+  .hero-stage.has-3d .mark-fallback{display:none}
+  /* one-time light sweep across the headline */
+  .sheen{background-image:linear-gradient(100deg,var(--cream) 42%,#ffffff 50%,var(--cream) 58%);background-size:280% 100%;background-position:120% 0;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:sheen 1.9s ease-out .5s forwards}
+  @keyframes sheen{to{background-position:-80% 0}}
+  @media(prefers-reduced-motion:reduce){.sheen{animation:none;background:none;-webkit-text-fill-color:var(--cream)}}
   .hero-meta span{display:flex;align-items:center;gap:8px}
   .hero-meta span::before{content:"";width:8px;height:8px;border-radius:2px;display:inline-block}
   .hero-meta span:nth-child(1)::before{background:var(--green)}
@@ -212,10 +221,13 @@ CSS = """
 
   /* PRODUCT CARDS (home) */
   #products{background:var(--bg-2);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
-  .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-  .card{background:var(--bg);border:1px solid var(--line);border-radius:var(--radius);padding:28px;display:flex;flex-direction:column;gap:12px;transition:.35s var(--ease);position:relative;overflow:hidden}
+  .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;perspective:1100px}
+  .card{background:var(--bg);border:1px solid var(--line);border-radius:var(--radius);padding:28px;display:flex;flex-direction:column;gap:12px;position:relative;overflow:hidden;transform:rotateX(var(--tx,0deg)) rotateY(var(--ty,0deg)) translateY(var(--lift,0px));transition:transform .25s var(--ease),border-color .25s var(--ease);will-change:transform}
   .card::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:var(--hue);opacity:.85}
-  .card:hover{transform:translateY(-4px);border-color:var(--hue)}
+  .card::after{content:"";position:absolute;inset:0;background:radial-gradient(420px circle at var(--gx,50%) var(--gy,50%),var(--hue-soft),transparent 65%);opacity:0;transition:opacity .35s;pointer-events:none}
+  .card:hover{--lift:-4px;border-color:var(--hue)}
+  .card:hover::after{opacity:1}
+  .card>*{position:relative;z-index:1}
   .card .tag{align-self:flex-start;font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;padding:5px 10px;border-radius:5px;color:var(--hue);background:var(--hue-soft)}
   .card h3{font-size:1.45rem}
   .card p{color:var(--text-2);font-size:.94rem;flex:1}
@@ -317,6 +329,9 @@ CSS = """
   .color-bar span:nth-child(4){background:var(--blue)}
 
   @media(max-width:900px){
+    .hero{padding:130px 0 70px}
+    .hero-inner{grid-template-columns:1fr;gap:10px}
+    .hero-stage{order:-1;max-width:300px;aspect-ratio:1/1}
     .cards,.proc-grid,.feature-grid{grid-template-columns:1fr}
     .mini-cards{grid-template-columns:1fr 1fr}
     .contact-grid{grid-template-columns:1fr;gap:34px}
@@ -353,6 +368,24 @@ JS = """
       es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
     }, { threshold: .1 });
     document.querySelectorAll('.reveal').forEach(function (el) { io.observe(el); });
+
+    // depth tilt + light-following glow on product cards (pointer devices only)
+    if (window.matchMedia('(hover: hover) and (prefers-reduced-motion: no-preference)').matches) {
+      document.querySelectorAll('.card').forEach(function (card) {
+        card.addEventListener('pointermove', function (e) {
+          var r = card.getBoundingClientRect();
+          var nx = (e.clientX - r.left) / r.width, ny = (e.clientY - r.top) / r.height;
+          card.style.setProperty('--ty', ((nx - 0.5) * 7).toFixed(2) + 'deg');
+          card.style.setProperty('--tx', ((0.5 - ny) * 6).toFixed(2) + 'deg');
+          card.style.setProperty('--gx', (nx * 100).toFixed(1) + '%');
+          card.style.setProperty('--gy', (ny * 100).toFixed(1) + '%');
+        });
+        card.addEventListener('pointerleave', function () {
+          card.style.setProperty('--tx', '0deg');
+          card.style.setProperty('--ty', '0deg');
+        });
+      });
+    }
   })();
 """
 
@@ -461,7 +494,7 @@ def page(title, desc, path, content, logo_b64, current="", extra_js=""):
 
 
 # ----------------------------------------------------------------- home page
-def home_content(logo_b64):
+def home_content(eight_b64):
     cards = "".join("""
       <a class="card hue-%s reveal" href="/%s/">
         <span class="tag">%s</span>
@@ -473,18 +506,25 @@ def home_content(logo_b64):
     return """
 <section class="hero">
   <div class="wrap hero-inner">
-    <img class="hero-logo reveal" src="data:image/png;base64,%s" alt="ZET8 — tech solutions for businesses">
-    <h1 class="reveal d1">Ready-to-use apps that run your small business.</h1>
-    <p class="sub reveal d2">No custom builds, no six-month projects. ZET8 makes finished software products — workforce management, back office, sales, local deals, on-demand hiring, and business launch. Sign up and start today.</p>
-    <div class="hero-cta reveal d3">
-      <a href="#products" class="btn btn-primary">See the apps <span class="arrow">→</span></a>
-      <a href="/about/" class="btn btn-ghost">About ZET8</a>
+    <div>
+      <div class="eyebrow mono reveal"><span class="dot" style="background:var(--yellow)"></span>Tech solutions for businesses</div>
+      <h1 class="sheen reveal d1">Ready-to-use apps that run your small business.</h1>
+      <p class="sub reveal d2">No custom builds, no six-month projects. ZET8 makes finished software products — workforce management, back office, sales, local deals, on-demand hiring, and business launch. Sign up and start today.</p>
+      <div class="hero-cta reveal d3">
+        <a href="#products" class="btn btn-primary">See the apps <span class="arrow">→</span></a>
+        <a href="/about/" class="btn btn-ghost">About ZET8</a>
+      </div>
+      <div class="hero-meta reveal d4">
+        <span>Ready today</span><span>Free trials</span><span>Mobile-first</span><span>AI built in</span>
+      </div>
     </div>
-    <div class="hero-meta reveal d4">
-      <span>Ready today</span><span>Free trials</span><span>Mobile-first</span><span>AI built in</span>
+    <div class="hero-stage reveal d1">
+      <canvas id="hero3d" aria-hidden="true"></canvas>
+      <img class="mark-fallback" src="data:image/png;base64,%s" alt="ZET8 mark">
     </div>
   </div>
 </section>
+<script defer src="/assets/hero3d.js"></script>
 
 <section id="products">
   <div class="wrap">
@@ -518,7 +558,7 @@ def home_content(logo_b64):
     <a href="/contact/" class="btn btn-primary">Contact us <span class="arrow">→</span></a>
   </div>
 </section>
-""" % (logo_b64, cards)
+""" % (eight_b64, cards)
 
 
 # -------------------------------------------------------------- product pages
@@ -672,6 +712,10 @@ NOTFOUND = """
 def main():
     with open(os.path.join(HERE, "logo-wide-transparent-clean.png"), "rb") as f:
         logo_b64 = base64.b64encode(f.read()).decode("ascii")
+    with open(os.path.join(HERE, "brand", "eight.png"), "rb") as f:
+        eight_b64 = base64.b64encode(f.read()).decode("ascii")
+    with open(os.path.join(HERE, "assets", "hero3d.js"), encoding="utf-8") as f:
+        hero3d_src = f.read()
 
     def write(rel, html):
         path = os.path.join(HERE, rel.replace("/", os.sep))
@@ -682,7 +726,7 @@ def main():
     # home
     home = page("ZET8 — Tech Solutions for Businesses",
                 "ZET8 makes finished, ready-to-use apps for small businesses — Ponchi workforce management, Deskomigo mobile back office, Zet8 CRM, LocalSave local deals, OnSMS text-based hiring, and Initor business launch.",
-                "/", home_content(logo_b64), logo_b64)
+                "/", home_content(eight_b64), logo_b64)
     write("index.html", home)
 
     # product pages
@@ -717,8 +761,11 @@ def main():
     sm += "</urlset>\n"
     write("sitemap.xml", sm)
 
-    # artifact preview: home page with absolute links so navigation works from the preview
-    write("artifact-preview.html", home.replace('href="/', 'href="%s/' % SITE).replace('href="%s/#' % SITE, 'href="#'))
+    # artifact preview: home page with absolute links so navigation works from the
+    # preview, and the 3D script inlined (the artifact CSP blocks external scripts)
+    preview = home.replace('<script defer src="/assets/hero3d.js"></script>',
+                           "<script>\n" + hero3d_src + "\n</script>")
+    write("artifact-preview.html", preview.replace('href="/', 'href="%s/' % SITE).replace('href="%s/#' % SITE, 'href="#'))
 
 
 if __name__ == "__main__":
