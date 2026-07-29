@@ -250,15 +250,15 @@
     x.fillStyle = p.hex;
     wrap(p.tagline, 40, 254, W - 80, 34);
 
-    // features
-    x.font = '400 24px ' + disp;
-    var fy = 356;
+    // features (up to four)
+    x.font = '400 23px ' + disp;
+    var fy = 348;
     p.features.forEach(function (f) {
       x.fillStyle = p.hex;
       x.beginPath(); x.arc(50, fy - 8, 5, 0, 7); x.fill();
       x.fillStyle = '#C9CEC6';
       x.fillText(f, 72, fy);
-      fy += 62;
+      fy += 56;
     });
 
     // divider + pricing

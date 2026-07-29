@@ -109,8 +109,8 @@ PRODUCTS = [
             ("Name & logo", "Brandable name ideas checked against live domain availability, plus a clean transparent-PNG logo in 5 style directions."),
             ("Real plans, not templates", "A 9-section business plan and an 8-section marketing plan grounded in your idea — downloadable as PDF or Word, fully editable."),
             ("A live website", "A professional one-page site generated and hosted for you. Edit any section with AI help and connect your own domain."),
-            ("Business card", "A matching business card design generated with the rest of your brand."),
             ("LLC & EIN included", "File your company in Texas, Delaware, or Wyoming with the EIN handled, so your new business is a real, registered company."),
+            ("Business card", "A matching business card design generated with the rest of your brand."),
             ("You own everything", "Plans, logo, website content, and your domain are yours outright — in English or Español."),
         ],
         "pricing": "Free to start · no credit card to try",
@@ -538,7 +538,7 @@ def home_content(logo_b64):
         "pricing": p["pricing"],
         "domain": "coming soon" if p.get("soon") else p["domain"],
         "url": p["url"],
-        "hex": HUE_HEX[p["hue"]], "features": [f[0] for f in p["features"][:3]],
+        "hex": HUE_HEX[p["hue"]], "features": [f[0] for f in p["features"][:4]],
     } for p in PRODUCTS])
     out = """
 <canvas id="scene" aria-hidden="true"></canvas>
