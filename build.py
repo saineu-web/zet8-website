@@ -52,20 +52,20 @@ PRODUCTS = [
         "pricing": "From $29.99/mo · 14-day free trial · no card required",
     },
     {
-        "slug": "crm", "name": "Zet8 CRM", "hue": "blue", "cat": "Sales",
-        "domain": "crm.zet8.com", "url": "https://crm.zet8.com",
-        "tagline": "The CRM that gets out of your way.",
-        "card": "Deals, contacts, and follow-ups in one clutter-free workspace for small sales teams.",
-        "about": "A streamlined CRM for small sales teams. Deals, contacts, and follow-ups in one clutter-free workspace — no feature bloat, no hidden per-feature costs, no six-week onboarding.",
+        "slug": "huntcustomer", "name": "HuntCustomer", "hue": "blue", "cat": "Sales",
+        "domain": "huntcustomer.com", "url": "https://huntcustomer.com",
+        "tagline": "Intelligent targeting. Precision results.",
+        "card": "A clean sales CRM for your team — or trained reps who do the hunting for you.",
+        "about": "A sales platform two ways: run your own outbound with a clutter-free CRM — pipeline, contacts, quotes to invoices, team workspaces — or plug in trained sales reps who handle the cold calling and deliver meetings on a quota basis.",
         "features": [
             ("Visual pipeline", "Drag deals across stages you define. See what's stuck and what's closing."),
-            ("One customer record", "Contacts, deals, and every conversation in a single timeline."),
-            ("Smart follow-ups", "Your dashboard tells you who to call today, so leads stop going cold."),
-            ("Team workspace", "Assign deals, thread conversations, and keep the whole team on the same page."),
-            ("No bloat", "Everything included at one price — no per-feature upsells."),
+            ("Smart follow-ups", "Contacts carry automatic follow-up reminders, so leads stop going cold."),
+            ("Sales reps on demand", "Dedicated or shared reps cold-call on a quota basis — pay per meetings delivered, not seats."),
+            ("Quote → invoice → e-sign", "One workflow from the first number to the signed agreement."),
+            ("Team workspaces", "Role-based permissions, shared calendars, and a dashboard of due items and stuck deals."),
             ("Cancel anytime", "Month-to-month billing. Stay because it works, not because you're locked in."),
         ],
-        "pricing": "$14.99/user/mo · 14-day free trial",
+        "pricing": "$14.99/user/mo · 14-day free trial · reps priced per quota",
     },
     {
         "slug": "localsave", "name": "LocalSave", "hue": "red", "cat": "Local commerce",
@@ -131,7 +131,7 @@ PRODUCTS = [
 ]
 
 # Display order across the whole site (nav, scene stops, cards, sitemap).
-_ORDER = ["onsms", "initor", "localsave", "ponchi", "deskomigo", "crm", "luuky"]
+_ORDER = ["onsms", "initor", "localsave", "ponchi", "deskomigo", "huntcustomer", "luuky"]
 PRODUCTS.sort(key=lambda p: _ORDER.index(p["slug"]))
 
 # ---------------------------------------------------------------------- css
@@ -482,11 +482,11 @@ def head(title, desc, path):
   "name": "ZET8",
   "url": "%(site)s",
   "logo": "%(site)s/logo.png",
-  "description": "ZET8 makes finished, ready-to-use apps for small businesses — Ponchi workforce management, Deskomigo mobile back office, Zet8 CRM, LocalSave local deals, OnSMS text-based hiring, and Initor business launch.",
+  "description": "ZET8 makes finished, ready-to-use apps for small businesses — Ponchi workforce management, Deskomigo mobile back office, HuntCustomer sales CRM, LocalSave local deals, OnSMS text-based hiring, and Initor business launch.",
   "email": "hello@zet8.com",
   "address": {"@type": "PostalAddress","addressLocality": "Houston","addressRegion": "TX","addressCountry": "US"},
   "parentOrganization": {"@type": "Organization","name": "Optima Buildsolutions LLC"},
-  "sameAs": ["https://ponchi.app","https://deskomigo.com","https://crm.zet8.com","https://localsave.com","https://onsms.com","https://initor.com"]
+  "sameAs": ["https://ponchi.app","https://deskomigo.com","https://huntcustomer.com","https://localsave.com","https://onsms.com","https://initor.com"]
 }
 </script>
 <style>%(css)s</style>
@@ -507,7 +507,7 @@ HUE_HEX = {"green": "#3CB371", "yellow": "#F4C82D", "red": "#E84A38", "blue": "#
 PUNCH = {
     "ponchi":    "Clock in from<br>the <em>job site</em>.",
     "deskomigo": "Run the back office<br>from the <em>truck</em>.",
-    "crm":       "A CRM that gets<br><em>out of the way</em>.",
+    "huntcustomer": "Hunt customers,<br>not <em>spreadsheets</em>.",
     "localsave": "Deals from the shop<br><em>down the street</em>.",
     "onsms":     "Post a job by<br><em>text message</em>.",
     "initor":    "Start the company<br><em>this week</em>.",
@@ -749,7 +749,7 @@ CONTACT = """
               <select id="need">
                 <option>Ponchi — workforce management</option>
                 <option>Deskomigo — back office app</option>
-                <option>Zet8 CRM — sales pipeline</option>
+                <option>HuntCustomer — sales CRM</option>
                 <option>LocalSave — local deals</option>
                 <option>OnSMS — on-demand hiring</option>
                 <option>Initor — business launch</option>
@@ -798,7 +798,7 @@ def main():
 
     # home (script URL carries a content hash so deploys bust browser caches)
     home = page("ZET8 — Tech Solutions for Businesses",
-                "ZET8 makes finished, ready-to-use apps for small businesses — Ponchi workforce management, Deskomigo mobile back office, Zet8 CRM, LocalSave local deals, OnSMS text-based hiring, and Initor business launch.",
+                "ZET8 makes finished, ready-to-use apps for small businesses — Ponchi workforce management, Deskomigo mobile back office, HuntCustomer sales CRM, LocalSave local deals, OnSMS text-based hiring, and Initor business launch.",
                 "/", home_content(logo_b64), logo_b64)
     home = home.replace('<script defer src="/assets/scene.js"></script>',
                         '<script defer src="/assets/scene.js?v=%s"></script>' % scene_v)
@@ -810,6 +810,14 @@ def main():
         desc = p["card"] + " " + p["pricing"] + "."
         write("%s/index.html" % p["slug"],
               page(title, desc, "/%s/" % p["slug"], product_content(p), logo_b64))
+
+    # legacy redirect: /crm/ moved when the product rebranded to HuntCustomer
+    write("crm/index.html",
+          '<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">'
+          '<meta http-equiv="refresh" content="0; url=/huntcustomer/">'
+          '<link rel="canonical" href="https://zet8.com/huntcustomer/">'
+          '<title>HuntCustomer | ZET8</title></head>'
+          '<body><p><a href="/huntcustomer/">This page moved to zet8.com/huntcustomer/</a></p></body></html>\n')
 
     # about
     minis = "".join('<a class="mini hue-%s" href="/%s/"><b>%s</b><span>%s</span></a>'
