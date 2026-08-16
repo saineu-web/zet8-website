@@ -490,6 +490,7 @@ def head(title, desc, path):
 }
 </script>
 <style>%(css)s</style>
+<script defer src="https://stats.zet8.com/pulse.js" data-app="zet8"></script>
 </head>
 <body>
 """ % {"title": title, "desc": desc, "path": path, "site": SITE, "css": CSS}
