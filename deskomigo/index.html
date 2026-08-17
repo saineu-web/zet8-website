@@ -158,18 +158,10 @@
 
   /* PRODUCTS strip (home, after the scene) */
   #products{background:var(--bg-2);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
-  /* ecosystem flow: each app hands off to the next */
-  .flow{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-bottom:40px}
-  .fstep{background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:11px 16px;display:flex;flex-direction:column;gap:2px}
-  .fstep b{color:var(--cream);font-family:var(--disp);font-weight:600;font-size:.95rem;display:flex;align-items:center;gap:8px}
-  .fstep b::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--hue);flex-shrink:0}
-  .fstep span{font-size:.73rem;color:var(--muted)}
-  .farrow{color:var(--muted);font-family:var(--mono);font-size:.9rem}
-  @media(max-width:640px){
-    .flow{flex-direction:column;align-items:stretch}
-    .fstep{flex-direction:row;justify-content:space-between;align-items:center;gap:12px}
-    .farrow{align-self:center;transform:rotate(90deg)}
-  }
+  /* home lineup doubles as the lifecycle flow: numbered step on each card */
+  .mini i{font-family:var(--mono);font-style:normal;font-size:.68rem;color:var(--hue);letter-spacing:.1em;display:block;margin-bottom:9px}
+  .mini i::after{content:" →";color:var(--line-2)}
+  .mini:last-child i::after{content:""}
 
   /* WHY strip */
   #why{padding:88px 0}

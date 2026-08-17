@@ -261,18 +261,10 @@ CSS = """
 
   /* PRODUCTS strip (home, after the scene) */
   #products{background:var(--bg-2);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
-  /* ecosystem flow: each app hands off to the next */
-  .flow{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-bottom:40px}
-  .fstep{background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:11px 16px;display:flex;flex-direction:column;gap:2px}
-  .fstep b{color:var(--cream);font-family:var(--disp);font-weight:600;font-size:.95rem;display:flex;align-items:center;gap:8px}
-  .fstep b::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--hue);flex-shrink:0}
-  .fstep span{font-size:.73rem;color:var(--muted)}
-  .farrow{color:var(--muted);font-family:var(--mono);font-size:.9rem}
-  @media(max-width:640px){
-    .flow{flex-direction:column;align-items:stretch}
-    .fstep{flex-direction:row;justify-content:space-between;align-items:center;gap:12px}
-    .farrow{align-self:center;transform:rotate(90deg)}
-  }
+  /* home lineup doubles as the lifecycle flow: numbered step on each card */
+  .mini i{font-family:var(--mono);font-style:normal;font-size:.68rem;color:var(--hue);letter-spacing:.1em;display:block;margin-bottom:9px}
+  .mini i::after{content:" →";color:var(--line-2)}
+  .mini:last-child i::after{content:""}
 
   /* WHY strip */
   #why{padding:88px 0}
@@ -559,13 +551,11 @@ def home_content(logo_b64):
                    '<a href="%s" target="_blank" rel="noopener">%s</a>' % (p["url"], p["domain"]))
                      for i, p in enumerate(PRODUCTS))
     outro_links = "".join('<a href="/%s/">%s</a>' % (p["slug"], p["name"]) for p in PRODUCTS)
-    flow = "".join(
-        ('<span class="farrow">→</span>' if i else "") +
-        '<div class="fstep hue-%s"><b>%s</b><span>%s</span></div>'
-        % (p["hue"], p["name"], STEP[p["slug"]])
-        for i, p in enumerate([q for q in PRODUCTS if not q.get("soon")]))
-    minis = "".join('<a class="mini hue-%s" href="/%s/"><b>%s</b><span>%s</span></a>'
-                    % (p["hue"], p["slug"], p["name"], p["cat"]) for p in PRODUCTS)
+    # The lineup IS the flow: numbered lifecycle steps, one card per product.
+    minis = "".join(
+        '<a class="mini hue-%s" href="/%s/"><i>%02d</i><b>%s</b><span>%s</span></a>'
+        % (p["hue"], p["slug"], i + 1, p["name"], STEP[p["slug"]])
+        for i, p in enumerate(PRODUCTS))
     data = json.dumps([{
         "name": p["name"], "cat": p["cat"], "tagline": p["tagline"],
         "pricing": p["pricing"],
@@ -623,9 +613,8 @@ def home_content(logo_b64):
       <div class="sec-head reveal">
         <div class="eyebrow mono"><span class="dot" style="background:var(--yellow)"></span>The system</div>
         <h2>An operating system for small business.</h2>
-        <p>Not @@COUNT@@ unrelated apps — each one hands off to the next, from the day you start to the day you get paid.</p>
+        <p>Each app hands off to the next — from the day you start the company to the day you get paid.</p>
       </div>
-      <div class="flow reveal">%s</div>
       <div class="mini-cards">%s</div>
     </div>
   </section>
@@ -656,7 +645,7 @@ def home_content(logo_b64):
 <script>window.ZET8_PRODUCTS = %s;</script>
 <script defer src="/assets/scene.js"></script>""" % (
         logo_b64, scards, len(PRODUCTS) + 1, outro_links, len(PRODUCTS),
-        "<div></div>" * (len(PRODUCTS) + 2), flow, minis, data)
+        "<div></div>" * (len(PRODUCTS) + 2), minis, data)
     return out.replace("@@COUNT@@", live_word)
 
 

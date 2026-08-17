@@ -158,18 +158,10 @@
 
   /* PRODUCTS strip (home, after the scene) */
   #products{background:var(--bg-2);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
-  /* ecosystem flow: each app hands off to the next */
-  .flow{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-bottom:40px}
-  .fstep{background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:11px 16px;display:flex;flex-direction:column;gap:2px}
-  .fstep b{color:var(--cream);font-family:var(--disp);font-weight:600;font-size:.95rem;display:flex;align-items:center;gap:8px}
-  .fstep b::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--hue);flex-shrink:0}
-  .fstep span{font-size:.73rem;color:var(--muted)}
-  .farrow{color:var(--muted);font-family:var(--mono);font-size:.9rem}
-  @media(max-width:640px){
-    .flow{flex-direction:column;align-items:stretch}
-    .fstep{flex-direction:row;justify-content:space-between;align-items:center;gap:12px}
-    .farrow{align-self:center;transform:rotate(90deg)}
-  }
+  /* home lineup doubles as the lifecycle flow: numbered step on each card */
+  .mini i{font-family:var(--mono);font-style:normal;font-size:.68rem;color:var(--hue);letter-spacing:.1em;display:block;margin-bottom:9px}
+  .mini i::after{content:" →";color:var(--line-2)}
+  .mini:last-child i::after{content:""}
 
   /* WHY strip */
   #why{padding:88px 0}
@@ -395,10 +387,9 @@
       <div class="sec-head reveal">
         <div class="eyebrow mono"><span class="dot" style="background:var(--yellow)"></span>The system</div>
         <h2>An operating system for small business.</h2>
-        <p>Not Six unrelated apps — each one hands off to the next, from the day you start to the day you get paid.</p>
+        <p>Each app hands off to the next — from the day you start the company to the day you get paid.</p>
       </div>
-      <div class="flow reveal"><div class="fstep hue-blue"><b>Initor</b><span>Start the business</span></div><span class="farrow">→</span><div class="fstep hue-blue"><b>HuntCustomer</b><span>Find & manage customers</span></div><span class="farrow">→</span><div class="fstep hue-red"><b>LocalSave</b><span>Bring customers through the door</span></div><span class="farrow">→</span><div class="fstep hue-green"><b>OnSMS</b><span>Find workers</span></div><span class="farrow">→</span><div class="fstep hue-yellow"><b>Ponchi</b><span>Manage the crew & the clock</span></div><span class="farrow">→</span><div class="fstep hue-green"><b>Deskomigo</b><span>Run the money & back office</span></div></div>
-      <div class="mini-cards"><a class="mini hue-blue" href="/initor/"><b>Initor</b><span>Business launch</span></a><a class="mini hue-blue" href="/huntcustomer/"><b>HuntCustomer</b><span>Sales</span></a><a class="mini hue-red" href="/localsave/"><b>LocalSave</b><span>Local commerce</span></a><a class="mini hue-green" href="/onsms/"><b>OnSMS</b><span>Hiring</span></a><a class="mini hue-yellow" href="/ponchi/"><b>Ponchi</b><span>Workforce</span></a><a class="mini hue-green" href="/deskomigo/"><b>Deskomigo</b><span>Back office</span></a><a class="mini hue-red" href="/luuky/"><b>Luuky</b><span>Coming soon</span></a></div>
+      <div class="mini-cards"><a class="mini hue-blue" href="/initor/"><i>01</i><b>Initor</b><span>Start the business</span></a><a class="mini hue-blue" href="/huntcustomer/"><i>02</i><b>HuntCustomer</b><span>Find & manage customers</span></a><a class="mini hue-red" href="/localsave/"><i>03</i><b>LocalSave</b><span>Bring customers through the door</span></a><a class="mini hue-green" href="/onsms/"><i>04</i><b>OnSMS</b><span>Find workers</span></a><a class="mini hue-yellow" href="/ponchi/"><i>05</i><b>Ponchi</b><span>Manage the crew & the clock</span></a><a class="mini hue-green" href="/deskomigo/"><i>06</i><b>Deskomigo</b><span>Run the money & back office</span></a><a class="mini hue-red" href="/luuky/"><i>07</i><b>Luuky</b><span>The next part of the system</span></a></div>
     </div>
   </section>
 
