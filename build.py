@@ -131,7 +131,10 @@ PRODUCTS = [
 ]
 
 # Display order across the whole site (nav, scene stops, cards, sitemap).
-_ORDER = ["onsms", "initor", "localsave", "ponchi", "deskomigo", "huntcustomer", "luuky"]
+# Lifecycle order — each app hands off to the next (the ecosystem story):
+# start the business -> find customers -> local offers -> find workers ->
+# manage workers/time -> run the money. Luuky (coming soon) closes the list.
+_ORDER = ["initor", "huntcustomer", "localsave", "onsms", "ponchi", "deskomigo", "luuky"]
 PRODUCTS.sort(key=lambda p: _ORDER.index(p["slug"]))
 
 # ---------------------------------------------------------------------- css
@@ -258,6 +261,18 @@ CSS = """
 
   /* PRODUCTS strip (home, after the scene) */
   #products{background:var(--bg-2);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  /* ecosystem flow: each app hands off to the next */
+  .flow{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-bottom:40px}
+  .fstep{background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:11px 16px;display:flex;flex-direction:column;gap:2px}
+  .fstep b{color:var(--cream);font-family:var(--disp);font-weight:600;font-size:.95rem;display:flex;align-items:center;gap:8px}
+  .fstep b::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--hue);flex-shrink:0}
+  .fstep span{font-size:.73rem;color:var(--muted)}
+  .farrow{color:var(--muted);font-family:var(--mono);font-size:.9rem}
+  @media(max-width:640px){
+    .flow{flex-direction:column;align-items:stretch}
+    .fstep{flex-direction:row;justify-content:space-between;align-items:center;gap:12px}
+    .farrow{align-self:center;transform:rotate(90deg)}
+  }
 
   /* WHY strip */
   #why{padding:88px 0}
@@ -504,6 +519,18 @@ def page(title, desc, path, content, logo_b64, current="", extra_js=""):
 # ----------------------------------------------------------------- home page
 HUE_HEX = {"green": "#3CB371", "yellow": "#F4C82D", "red": "#E84A38", "blue": "#5468E8"}
 
+# Each product's role in the lifecycle — shown on journey stops and the
+# ecosystem flow strip ("an operating system for small businesses").
+STEP = {
+    "initor":       "Start the business",
+    "huntcustomer": "Find & manage customers",
+    "localsave":    "Bring customers through the door",
+    "onsms":        "Find workers",
+    "ponchi":       "Manage the crew & the clock",
+    "deskomigo":    "Run the money & back office",
+    "luuky":        "The next part of the system",
+}
+
 # Scene-card headlines: one punchy line per stop, <em> takes the product hue.
 PUNCH = {
     "ponchi":    "Clock in from<br>the <em>job site</em>.",
@@ -526,12 +553,17 @@ def home_content(logo_b64):
     <h2>%s</h2>
     <p>%s</p>
     <div class="meta"><span class="badge2">%s</span>%s</div>
-  </section>""" % (p["hue"], i + 1, p["name"], p["cat"], PUNCH[p["slug"]], p["card"],
+  </section>""" % (p["hue"], i + 1, p["name"], STEP[p["slug"]], PUNCH[p["slug"]], p["card"],
                    p["pricing"],
                    '<a href="/contact/">Get notified</a>' if p.get("soon") else
                    '<a href="%s" target="_blank" rel="noopener">%s</a>' % (p["url"], p["domain"]))
                      for i, p in enumerate(PRODUCTS))
     outro_links = "".join('<a href="/%s/">%s</a>' % (p["slug"], p["name"]) for p in PRODUCTS)
+    flow = "".join(
+        ('<span class="farrow">→</span>' if i else "") +
+        '<div class="fstep hue-%s"><b>%s</b><span>%s</span></div>'
+        % (p["hue"], p["name"], STEP[p["slug"]])
+        for i, p in enumerate([q for q in PRODUCTS if not q.get("soon")]))
     minis = "".join('<a class="mini hue-%s" href="/%s/"><b>%s</b><span>%s</span></a>'
                     % (p["hue"], p["slug"], p["name"], p["cat"]) for p in PRODUCTS)
     data = json.dumps([{
@@ -555,8 +587,8 @@ def home_content(logo_b64):
 %s
   <section class="scard scard-center" data-step="%d">
     <div class="eyebrow2">End of track</div>
-    <h2>@@COUNT@@ apps.<br>One <em>operating layer</em>.</h2>
-    <p>Finished software, built in Houston for owner-operators — in the two languages this city runs on.</p>
+    <h2>An operating system<br>for <em>small business</em>.</h2>
+    <p>Apps that hand off to each other — from the day you start the company to the day you get paid. Built in Houston, in the two languages this city runs on.</p>
     <div class="slinks">%s<a href="#products">Keep scrolling ↓</a></div>
   </section>
 </div>
@@ -589,10 +621,11 @@ def home_content(logo_b64):
   <section id="products">
     <div class="wrap">
       <div class="sec-head reveal">
-        <div class="eyebrow mono"><span class="dot" style="background:var(--yellow)"></span>The lineup</div>
-        <h2>@@COUNT@@ apps. One job: run the business better.</h2>
-        <p>Finished products — built, shipped, and run by ZET8. Pick one and start today — plus one more on the way.</p>
+        <div class="eyebrow mono"><span class="dot" style="background:var(--yellow)"></span>The system</div>
+        <h2>An operating system for small business.</h2>
+        <p>Not @@COUNT@@ unrelated apps — each one hands off to the next, from the day you start to the day you get paid.</p>
       </div>
+      <div class="flow reveal">%s</div>
       <div class="mini-cards">%s</div>
     </div>
   </section>
@@ -623,7 +656,7 @@ def home_content(logo_b64):
 <script>window.ZET8_PRODUCTS = %s;</script>
 <script defer src="/assets/scene.js"></script>""" % (
         logo_b64, scards, len(PRODUCTS) + 1, outro_links, len(PRODUCTS),
-        "<div></div>" * (len(PRODUCTS) + 2), minis, data)
+        "<div></div>" * (len(PRODUCTS) + 2), flow, minis, data)
     return out.replace("@@COUNT@@", live_word)
 
 
@@ -707,6 +740,7 @@ ABOUT = """
       <p><b>We don't do custom projects.</b> Every ZET8 product is a finished app you can sign up for today — born from real problems we watched real businesses fight: time theft on job sites, invoices written at midnight, leads going cold in spreadsheets, empty shifts with no one to call.</p>
       <p><b>We build for the phone in your pocket.</b> Your office is a truck cab, a counter, a job site. Everything we ship works one-handed on a phone first — in English and Español.</p>
       <p><b>We use AI where it erases busywork.</b> Scanning receipts, drafting summaries, flagging follow-ups — not another chatbot between you and your work.</p>
+      <p><b>Together, they're one system.</b> Start a business with Initor. Find customers with HuntCustomer and bring them through the door with LocalSave. Find workers with OnSMS, run the crew with Ponchi, and run the money with Deskomigo. Each app hands off to the next — an operating system for small business.</p>
       <p class="legal-note">ZET8 is operated by Optima Buildsolutions LLC · Houston, Texas</p>
     </div>
   </div>
@@ -804,7 +838,7 @@ def main():
 
     # home (script URL carries a content hash so deploys bust browser caches)
     home = page("ZET8 — Tech Solutions for Businesses",
-                "ZET8 makes finished, ready-to-use apps for small businesses — Ponchi workforce management, Deskomigo mobile back office, HuntCustomer sales CRM, LocalSave local deals, OnSMS text-based hiring, and Initor business launch.",
+                "ZET8 is an operating system for small business: start it with Initor, win customers with HuntCustomer and LocalSave, staff it with OnSMS and Ponchi, and run the money with Deskomigo.",
                 "/", home_content(logo_b64), logo_b64)
     home = home.replace('<script defer src="/assets/scene.js"></script>',
                         '<script defer src="/assets/scene.js?v=%s"></script>' % scene_v)
