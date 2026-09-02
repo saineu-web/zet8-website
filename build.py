@@ -811,6 +811,142 @@ NOTFOUND = """
 """
 
 
+# ---------------------------------------------------------------- legal pages
+# Source of truth: Desktop/Zet8/tipshare/legal/*.md (attorney-reviewed copies are
+# dropped into legal/ here). Editorial markers ("DRAFT" blockquotes, [ATTORNEY]
+# flags) stay in the source and are stripped from the published page.
+
+LEGAL_PAGES = [
+    {"slug": "tipshare/privacy", "file": "tipshare-privacy.md", "hue": "yellow",
+     "title": "TipShare by Ponchi — Privacy Policy | ZET8",
+     "desc": "How TipShare by Ponchi collects, uses, and protects merchant and employee data when installed from the Clover App Market."},
+    {"slug": "tipshare/terms", "file": "tipshare-terms.md", "hue": "yellow",
+     "title": "TipShare by Ponchi — Merchant Terms of Service | ZET8",
+     "desc": "The terms under which merchants use TipShare by Ponchi from the Clover App Market."},
+]
+
+LEGAL_CSS = """
+<style>
+  .legal{max-width:760px}
+  .legal h1{font-size:clamp(30px,4.6vw,44px);margin-bottom:8px}
+  .legal .meta{color:var(--muted);font-family:var(--mono);font-size:13px;margin-bottom:30px}
+  .legal h2{font-size:22px;margin:38px 0 10px;color:var(--cream)}
+  .legal h3{font-size:17px;margin:24px 0 8px;color:var(--cream)}
+  .legal p{margin:0 0 14px;color:var(--text-2)}
+  .legal ul{margin:0 0 16px 22px;color:var(--text-2)}
+  .legal li{margin:6px 0}
+  .legal b{color:var(--text)}
+  .legal a{color:var(--yellow);text-decoration:underline;text-underline-offset:3px}
+  .legal table{border-collapse:collapse;width:100%;margin:6px 0 18px;font-size:15px}
+  .legal th,.legal td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top;color:var(--text-2)}
+  .legal th{color:var(--muted);font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase}
+  .legal .box{border:1px solid var(--line-2);background:var(--bg-2);border-radius:var(--radius);padding:14px 18px;margin:0 0 18px}
+</style>
+"""
+
+
+def _md_inline(s):
+    import html as _h
+    import re as _r
+    s = _h.escape(s, quote=False)
+    s = _r.sub(r"\*\*(.+?)\*\*", r"<b>\1</b>", s)
+    s = _r.sub(r"`(.+?)`", r"<code>\1</code>", s)
+    s = _r.sub(r"\[([^\]]+)\]\(([^)]+)\)", r'<a href="\2">\1</a>', s)
+    s = _r.sub(r"(?<![\"'>=])(https?://[^\s<)]+)", r'<a href="\1">\1</a>', s)
+    s = _r.sub(r"(?<![\w@/])([\w.+-]+@[\w-]+\.[\w.-]+)", r'<a href="mailto:\1">\1</a>', s)
+    return s
+
+
+def md_to_html(md):
+    """Tiny Markdown subset: #/##/### headings, paragraphs, - lists, | tables |,
+    > blockquotes, **bold**, links. Enough for the legal documents, no dependency."""
+    import re as _r
+    out, para, lst, table, quote = [], [], [], [], []
+
+    def flush():
+        nonlocal para, lst, table, quote
+        if para:
+            out.append("<p>%s</p>" % _md_inline(" ".join(para)))
+            para = []
+        if lst:
+            out.append("<ul>%s</ul>" % "".join("<li>%s</li>" % _md_inline(x) for x in lst))
+            lst = []
+        if table:
+            rows = [[c.strip() for c in r.strip().strip("|").split("|")] for r in table
+                    if not _r.match(r"^\s*\|?\s*-{2,}", r)]
+            if rows:
+                head = "".join("<th>%s</th>" % _md_inline(c) for c in rows[0])
+                body = "".join("<tr>%s</tr>" % "".join("<td>%s</td>" % _md_inline(c) for c in r) for r in rows[1:])
+                out.append("<table><thead><tr>%s</tr></thead><tbody>%s</tbody></table>" % (head, body))
+            table = []
+        if quote:
+            text = " ".join(quote)
+            if "DRAFT" not in text:   # editorial notes never reach the published page
+                out.append('<div class="box">%s</div>' % _md_inline(text))
+            quote = []
+
+    for raw in md.splitlines():
+        line = raw.rstrip()
+        line = _r.sub(r"\s*\*\*\[ATTORNEY[^\]]*\]\*\*", "", line)
+        if not line.strip():
+            flush()
+            continue
+        if line.startswith("|"):
+            if para or lst or quote:
+                flush()
+            table.append(line)
+            continue
+        if table:
+            flush()
+        m = _r.match(r"^(#{1,3})\s+(.*)", line)
+        if m:
+            flush()
+            lvl = len(m.group(1))
+            out.append("<h%d>%s</h%d>" % (lvl, _md_inline(m.group(2)), lvl))
+            continue
+        if line.startswith(">"):
+            if para or lst:
+                flush()
+            quote.append(line.lstrip("> ").strip())
+            continue
+        if quote:
+            flush()
+        if _r.match(r"^\s*-\s+", line):
+            if para:
+                flush()
+            lst.append(_r.sub(r"^\s*-\s+", "", line))
+            continue
+        if lst and line.startswith("  "):
+            lst[-1] += " " + line.strip()
+            continue
+        if lst:
+            flush()
+        para.append(line.strip())
+    flush()
+    return "\n".join(out)
+
+
+def legal_content(spec, md):
+    import re as _r
+    body = md_to_html(md)
+    body = _r.sub(r"^<h1>.*?</h1>\n?", "", body, count=1)       # title rendered in the hero
+    body = body.replace("<p><b>Effective date:</b>", '<p class="meta"><b>Effective date:</b>')
+    return LEGAL_CSS + """
+<section class="page-hero" style="padding-bottom:0">
+  <div class="wrap legal">
+    <div class="eyebrow mono"><span class="dot" style="background:var(--%s)"></span>TipShare by Ponchi</div>
+    <h1>%s</h1>
+  </div>
+</section>
+<section style="padding-top:18px">
+  <div class="wrap legal">
+%s
+    <p class="legal-note" style="margin-top:36px">TipShare by Ponchi is operated by Optima BuildSolutions LLC · Cypress, Texas · <a href="mailto:contact@ponchi.app">contact@ponchi.app</a> · <a href="/tipshare/privacy/">Privacy Policy</a> · <a href="/tipshare/terms/">Merchant Terms</a></p>
+  </div>
+</section>
+""" % (spec["hue"], spec["title"].split(" | ")[0].split(" — ", 1)[1], body)
+
+
 def main():
     import hashlib
     with open(os.path.join(HERE, "logo-wide-transparent-clean.png"), "rb") as f:
@@ -866,8 +1002,16 @@ def main():
     write("404.html",
           page("Page not found | ZET8", "This page doesn't exist.", "/404.html", NOTFOUND, logo_b64))
 
+    # legal pages (TipShare by Ponchi - Clover App Market listing requirement)
+    for spec in LEGAL_PAGES:
+        with open(os.path.join(HERE, "legal", spec["file"]), encoding="utf-8") as f:
+            md = f.read()
+        write("%s/index.html" % spec["slug"],
+              page(spec["title"], spec["desc"], "/%s/" % spec["slug"], legal_content(spec, md), logo_b64))
+
     # sitemap
-    urls = ["/"] + ["/%s/" % p["slug"] for p in PRODUCTS] + ["/about/", "/contact/"]
+    urls = (["/"] + ["/%s/" % p["slug"] for p in PRODUCTS] + ["/about/", "/contact/"]
+            + ["/%s/" % s["slug"] for s in LEGAL_PAGES])
     sm = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
     sm += "".join("  <url><loc>%s%s</loc><changefreq>weekly</changefreq></url>\n" % (SITE, u) for u in urls)
     sm += "</urlset>\n"
