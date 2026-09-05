@@ -86,16 +86,16 @@ PRODUCTS = [
     {
         "slug": "onsms", "name": "OnSMS", "hue": "green", "cat": "Hiring",
         "domain": "onsms.com", "url": "https://onsms.com",
-        "tagline": "Text a job. Get offers. Pick one.",
-        "card": "Text-based hiring — post a job by SMS, get sealed offers from workers, pick one.",
-        "about": "Text-based hiring for businesses and homeowners who need workers now — shift coverage, cleaning, moving, construction, and more. Describe the job in a text, get sealed price offers from available workers, and pick one. Usually matched the same day.",
+        "tagline": "Need a worker today? Text the job, get offers, pick one.",
+        "card": "On-demand hiring by text — post any job, get sealed price offers from workers nearby, and pick one. Same day.",
+        "about": "On-demand hiring by text. Need a worker for one task or a full day? Describe the job in a single text and qualified workers nearby reply with their price — you compare the offers and pick one, often the same day. And if you want extra income on your free time, reply to jobs near you, set your own price, and keep 100%. No app on either side.",
         "features": [
-            ("Text a job", "Describe what you need in one message. Matching starts within minutes."),
-            ("Sealed offers", "Available workers reply with their price. Compare offers and pick the best."),
-            ("No app required", "Workers respond over plain SMS — no downloads, no sign-up friction."),
-            ("Same-day matching", "Emergency staffing and shift coverage typically filled the same day."),
-            ("Workers keep 100%", "Direct payment, no wage markup. Workers set their own rates."),
-            ("English + Español", "Fully bilingual for employers and workers."),
+            ("Text the job", "Describe what you need in one message. Workers nearby are notified in minutes."),
+            ("Get sealed offers", "Workers bid blind with their price. Compare real offers side by side and pick."),
+            ("No app required", "Everything runs over plain SMS — no downloads or sign-up on either side."),
+            ("Same-day matching", "Urgent staffing and shift coverage typically filled the same day."),
+            ("Workers keep 100%", "Pay your worker directly. No markup on wages, no cut taken."),
+            ("English + Español", "Fully bilingual for employers and workers alike."),
         ],
         "pricing": "First 2 hires free · then $15 per confirmed hire",
     },
@@ -709,6 +709,255 @@ def product_content(p):
     }
 
 
+# ---------------------------------------------------- OnSMS bespoke landing page
+# OnSMS gets its own rich, self-explaining landing page (dual-audience: businesses
+# who need a task done + workers who want extra income). All other products use
+# the shared product_content() template above. Scoped CSS uses the `.os-` prefix.
+def onsms_content(p):
+    minis = "".join("""
+      <a class="mini hue-%s" href="/%s/"><b>%s</b><span>%s</span></a>""" % (
+        q["hue"], q["slug"], q["name"], q["cat"]) for q in PRODUCTS if q["slug"] != "onsms")
+    html = r"""
+<style>
+  .os h1,.os h2,.os h3,.os h4{font-family:var(--disp);color:var(--cream);letter-spacing:-.03em;line-height:1.06}
+  .os .hl{color:var(--green)}
+  .os-eyebrow{display:inline-flex;align-items:center;gap:9px;font-family:var(--mono);font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;color:var(--green);border:1px solid var(--line-2);padding:7px 14px;border-radius:100px;margin-bottom:26px}
+  .os-dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 0 4px rgba(60,179,113,.16)}
+  /* HERO */
+  .os-hero{padding:132px 0 44px}
+  .os-hero-grid{display:grid;grid-template-columns:1.04fr .96fr;gap:56px;align-items:center}
+  .os-hero-copy h1{font-size:clamp(34px,5.1vw,60px);margin-bottom:22px}
+  .os-lead{font-size:1.13rem;color:var(--text-2);max-width:46ch;margin-bottom:30px;line-height:1.6}
+  .os-cta{display:flex;gap:13px;flex-wrap:wrap;margin-bottom:22px}
+  .os-btn-outline{background:transparent;color:var(--cream);border:1.5px solid var(--line-2)}
+  .os-btn-outline:hover{border-color:var(--green);color:var(--green);transform:translateY(-2px)}
+  .os-trust{display:flex;gap:10px;flex-wrap:wrap;font-size:.86rem;color:var(--muted);align-items:center}
+  .os-trust b{color:var(--text-2);font-weight:500}
+  /* PHONE MOCKUP */
+  .os-hero-visual{display:flex;justify-content:center}
+  .os-phone{width:335px;max-width:100%;background:var(--bg-2);border:1px solid var(--line-2);border-radius:36px;padding:15px 14px 20px;box-shadow:0 44px 100px -34px rgba(0,0,0,.92),0 0 0 1px rgba(60,179,113,.07);position:relative}
+  .os-phone::before{content:"";position:absolute;top:20px;left:50%;transform:translateX(-50%);width:52px;height:5px;border-radius:5px;background:var(--line-2)}
+  .os-phone-top{text-align:center;color:var(--muted);font-family:var(--mono);font-size:.64rem;letter-spacing:.16em;text-transform:uppercase;padding:18px 0 12px;border-bottom:1px solid var(--line);margin-bottom:15px}
+  .os-phone-top b{color:var(--green)}
+  .os-thread{display:flex;flex-direction:column;gap:10px;padding:2px 4px}
+  .os-msg{max-width:84%;padding:11px 14px;border-radius:17px;font-size:.89rem;line-height:1.42}
+  .os-msg.out{align-self:flex-end;background:var(--green);color:#04140c;border-bottom-right-radius:5px;font-weight:500}
+  .os-msg.small{padding:9px 15px;font-weight:600}
+  .os-sys{align-self:center;font-size:.7rem;color:var(--muted);font-family:var(--mono);letter-spacing:.03em;text-align:center;padding:2px 0}
+  .os-sys.ok{color:var(--green)}
+  .os-offer{align-self:flex-start;display:flex;align-items:center;gap:11px;background:var(--bg-3);border:1px solid var(--line-2);border-radius:15px;padding:9px 13px;width:90%;box-shadow:0 6px 18px -12px rgba(0,0,0,.7)}
+  .os-av{width:35px;height:35px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--disp);font-weight:700;font-size:.92rem;color:#04140c;flex:none}
+  .os-offer .nm b{font-size:.88rem;color:var(--cream);display:block;line-height:1.2}
+  .os-offer .nm small{font-size:.7rem;color:var(--muted)}
+  .os-price{margin-left:auto;font-family:var(--disp);font-weight:700;font-size:1.08rem;color:var(--green)}
+  /* SECTIONS */
+  .os-sec{padding:74px 0;border-top:1px solid var(--line)}
+  .os-sec-head{text-align:center;max-width:640px;margin:0 auto 48px}
+  .os-kicker{font-family:var(--mono);font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:var(--green);margin-bottom:14px}
+  .os-sec-head h2{font-size:clamp(28px,3.7vw,42px);margin-bottom:14px}
+  .os-sec-head p{color:var(--text-2);font-size:1.06rem}
+  /* STEPS */
+  .os-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+  .os-step{background:var(--bg-2);border:1px solid var(--line);border-radius:var(--radius-lg);padding:34px 30px}
+  .os-num{font-family:var(--disp);font-weight:700;font-size:1rem;width:42px;height:42px;border-radius:50%;background:rgba(60,179,113,.12);color:var(--green);display:flex;align-items:center;justify-content:center;margin-bottom:20px;border:1px solid rgba(60,179,113,.32)}
+  .os-step h3{font-size:1.32rem;margin-bottom:10px}
+  .os-step p{color:var(--text-2);font-size:.96rem}
+  /* SPLIT (two audiences) */
+  .os-split{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+  .os-card2{border:1px solid var(--line-2);border-radius:var(--radius-lg);padding:42px 36px;background:linear-gradient(180deg,var(--bg-2),var(--bg))}
+  .os-card2.worker{border-color:rgba(60,179,113,.4);background:linear-gradient(180deg,rgba(60,179,113,.06),var(--bg))}
+  .os-tag2{font-family:var(--mono);font-size:.66rem;letter-spacing:.16em;text-transform:uppercase;color:var(--green);margin-bottom:16px;display:block}
+  .os-card2 h3{font-size:1.72rem;margin-bottom:14px}
+  .os-card2>p{color:var(--text-2);margin-bottom:22px}
+  .os-list{list-style:none;display:flex;flex-direction:column;gap:12px;margin-bottom:30px}
+  .os-list li{display:flex;gap:11px;align-items:flex-start;color:var(--text-2);font-size:.97rem}
+  .os-list li::before{content:"\2713";color:var(--green);font-weight:700;flex:none}
+  /* CHIPS */
+  .os-chips{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;max-width:840px;margin:0 auto}
+  .os-chip{display:inline-flex;align-items:center;gap:9px;background:var(--bg-2);border:1px solid var(--line-2);border-radius:100px;padding:12px 20px;font-size:.95rem;color:var(--text);transition:.2s}
+  .os-chip:hover{border-color:var(--green);color:var(--cream);transform:translateY(-2px)}
+  .os-chip .em{font-size:1.06rem}
+  /* WHY */
+  .os-why{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+  .os-why-item{padding:30px 28px;border:1px solid var(--line);border-radius:var(--radius);background:var(--bg-2)}
+  .os-ic{font-size:1.5rem;margin-bottom:14px}
+  .os-why-item h4{font-size:1.12rem;margin-bottom:8px}
+  .os-why-item p{color:var(--text-2);font-size:.92rem}
+  /* FAQ */
+  .os-faq{max-width:770px;margin:0 auto;display:flex;flex-direction:column;gap:12px}
+  .os-q{border:1px solid var(--line);border-radius:15px;background:var(--bg-2);padding:23px 27px}
+  .os-q h4{font-size:1.08rem;margin-bottom:8px}
+  .os-q p{color:var(--text-2);font-size:.95rem}
+  /* FINAL */
+  .os-final{text-align:center;padding:96px 0;border-top:1px solid var(--line);background:radial-gradient(ellipse at 50% 0%,rgba(60,179,113,.1),transparent 62%)}
+  .os-final h2{font-size:clamp(30px,4.6vw,52px);margin-bottom:18px}
+  .os-final>.wrap>p{color:var(--text-2);font-size:1.12rem;margin:0 auto 32px;max-width:52ch}
+  .os-final .os-cta{justify-content:center}
+  .os-note{margin-top:24px;font-family:var(--mono);font-size:.73rem;letter-spacing:.05em;color:var(--muted)}
+  @media(max-width:900px){
+    .os-hero-grid{grid-template-columns:1fr;gap:42px}
+    .os-hero{padding:112px 0 24px}
+    .os-lead{max-width:none}
+    .os-steps,.os-why{grid-template-columns:1fr}
+    .os-split{grid-template-columns:1fr}
+  }
+</style>
+<div class="hue-green os">
+
+<section class="os-hero">
+  <div class="wrap os-hero-grid">
+    <div class="os-hero-copy">
+      <div class="os-eyebrow reveal"><span class="os-dot"></span>On-demand hiring by text &middot; Texas</div>
+      <h1 class="reveal d1">Need a worker <span class="hl">today?</span><br>Text the job. Get offers. Pick one.</h1>
+      <p class="os-lead reveal d2">Whether it&rsquo;s one quick task or a full day of help, describe what you need in a single text. Qualified workers nearby reply with their price &mdash; you compare the offers and pick the one you want. Often matched the same day. No app, no agency, no markup on wages.</p>
+      <div class="os-cta reveal d3">
+        <a class="btn btn-hue" href="@@URL@@" target="_blank" rel="noopener">Post a job &mdash; get prices <span class="arrow">&rarr;</span></a>
+        <a class="btn os-btn-outline" href="@@URL@@" target="_blank" rel="noopener">Earn on your free time</a>
+      </div>
+      <div class="os-trust reveal d4"><b>No app to download</b> &middot; <b>Workers keep 100%</b> &middot; <b>English &amp; Espa&ntilde;ol</b></div>
+    </div>
+    <div class="os-hero-visual reveal d2">
+      <div class="os-phone">
+        <div class="os-phone-top">on<b>sms</b> &middot; today 9:04 AM</div>
+        <div class="os-thread">
+          <div class="os-msg out">Need 2 people to help move a couch &amp; boxes. Sat 10 AM, Katy TX. ~2 hrs.</div>
+          <div class="os-sys">&#10003; Sent to 14 available workers near you</div>
+          <div class="os-offer"><span class="os-av" style="background:#F4C82D">M</span><span class="nm"><b>Marcus D.</b><small>&#9733; 4.9 &middot; 63 jobs</small></span><span class="os-price">$50</span></div>
+          <div class="os-offer"><span class="os-av" style="background:#3CB371">A</span><span class="nm"><b>Ana R.</b><small>&#9733; 5.0 &middot; 41 jobs</small></span><span class="os-price">$40</span></div>
+          <div class="os-offer"><span class="os-av" style="background:#5468E8">T</span><span class="nm"><b>Tobias K.</b><small>&#9733; 4.8 &middot; 28 jobs</small></span><span class="os-price">$55</span></div>
+          <div class="os-msg out small">Pick Ana &#128077;</div>
+          <div class="os-sys ok">&#10003; Ana is confirmed for Sat 10 AM. She&rsquo;ll text when she&rsquo;s on the way.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="os-sec">
+  <div class="wrap">
+    <div class="os-sec-head reveal">
+      <div class="os-kicker">How it works</div>
+      <h2>Three texts from &ldquo;I need help&rdquo; to &ldquo;done.&rdquo;</h2>
+      <p>No forms, no phone tag, no waiting on an agency to call you back.</p>
+    </div>
+    <div class="os-steps">
+      <div class="os-step reveal"><div class="os-num">1</div><h3>Text your job</h3><p>Describe what you need, where, and when &mdash; in one message. That&rsquo;s the whole &ldquo;form.&rdquo; We instantly notify available workers nearby.</p></div>
+      <div class="os-step reveal"><div class="os-num">2</div><h3>Get sealed offers</h3><p>Workers reply with their name, rating, and price. Offers are sealed &mdash; they bid blind, so you get honest market rates side by side.</p></div>
+      <div class="os-step reveal"><div class="os-num">3</div><h3>Pick your worker</h3><p>Choose the offer you like best. Your worker shows up and you pay them directly. First two hires are on us.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="os-sec">
+  <div class="wrap">
+    <div class="os-split">
+      <div class="os-card2 reveal">
+        <span class="os-tag2">For businesses &amp; homeowners</span>
+        <h3>Get a price for your task.</h3>
+        <p>A short task or a full day of help &mdash; post it once and let qualified workers come to you with real prices. You stay in control the whole way.</p>
+        <ul class="os-list">
+          <li>Same-day matching for urgent jobs and shift coverage</li>
+          <li>Compare real offers and pick &mdash; never a take-it-or-leave-it quote</li>
+          <li>No agency fees and no markup on what workers charge</li>
+          <li>Every worker is rated by past customers</li>
+        </ul>
+        <a class="btn btn-hue" href="@@URL@@" target="_blank" rel="noopener">Post a job <span class="arrow">&rarr;</span></a>
+      </div>
+      <div class="os-card2 worker reveal">
+        <span class="os-tag2">For workers</span>
+        <h3>Want extra income on your free time?</h3>
+        <p>Turn a free afternoon into cash. Get a text when there&rsquo;s a job near you, reply with your price, and work only when you want to.</p>
+        <ul class="os-list">
+          <li>No app to install &mdash; just reply to a text message</li>
+          <li>Set your own price on every single job</li>
+          <li>Keep 100% of what you earn &mdash; we never touch your pay</li>
+          <li>Pick up as much or as little work as you like</li>
+        </ul>
+        <a class="btn btn-hue" href="@@URL@@" target="_blank" rel="noopener">Start earning <span class="arrow">&rarr;</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="os-sec">
+  <div class="wrap">
+    <div class="os-sec-head reveal">
+      <div class="os-kicker">What people hire for</div>
+      <h2>If it&rsquo;s a job someone can show up and do, post it.</h2>
+    </div>
+    <div class="os-chips reveal">
+      <span class="os-chip"><span class="em">&#128230;</span>Moving &amp; loading</span>
+      <span class="os-chip"><span class="em">&#129529;</span>Cleaning</span>
+      <span class="os-chip"><span class="em">&#127794;</span>Yard &amp; landscaping</span>
+      <span class="os-chip"><span class="em">&#128295;</span>Handyman help</span>
+      <span class="os-chip"><span class="em">&#127959;&#65039;</span>Construction labor</span>
+      <span class="os-chip"><span class="em">&#128666;</span>Delivery &amp; errands</span>
+      <span class="os-chip"><span class="em">&#127869;&#65039;</span>Event &amp; restaurant</span>
+      <span class="os-chip"><span class="em">&#127981;</span>Warehouse</span>
+      <span class="os-chip"><span class="em">&#128296;</span>Painting</span>
+      <span class="os-chip"><span class="em">&#9201;&#65039;</span>Shift coverage</span>
+    </div>
+  </div>
+</section>
+
+<section class="os-sec">
+  <div class="wrap">
+    <div class="os-sec-head reveal">
+      <div class="os-kicker">Why onsms</div>
+      <h2>Hiring stripped down to a text message.</h2>
+    </div>
+    <div class="os-why">
+      <div class="os-why-item reveal"><div class="os-ic">&#128274;</div><h4>Sealed offers</h4><p>Workers bid without seeing each other, so you get honest market prices &mdash; not padded quotes.</p></div>
+      <div class="os-why-item reveal"><div class="os-ic">&#128241;</div><h4>No app needed</h4><p>Everything happens over plain SMS. Nothing to download, install, or log into &mdash; on either side.</p></div>
+      <div class="os-why-item reveal"><div class="os-ic">&#9889;</div><h4>Same-day</h4><p>Post in the morning, get help by the afternoon. Built for urgent needs and last-minute gaps.</p></div>
+      <div class="os-why-item reveal"><div class="os-ic">&#128181;</div><h4>Workers keep 100%</h4><p>You pay your worker directly. onsms never takes a cut of anyone&rsquo;s wages.</p></div>
+      <div class="os-why-item reveal"><div class="os-ic">&#11088;</div><h4>Rated &amp; real</h4><p>Every worker carries a star rating and job history from real past customers.</p></div>
+      <div class="os-why-item reveal"><div class="os-ic">&#127760;</div><h4>Bilingual</h4><p>Fully in English and Espa&ntilde;ol, for employers and workers alike.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="os-sec">
+  <div class="wrap">
+    <div class="os-sec-head reveal">
+      <div class="os-kicker">Questions</div>
+      <h2>Good to know</h2>
+    </div>
+    <div class="os-faq">
+      <div class="os-q reveal"><h4>What does it cost?</h4><p>Your first two hires are free. After that it&rsquo;s a flat $15 per confirmed hire &mdash; no subscription. Workers never pay anything.</p></div>
+      <div class="os-q reveal"><h4>Do workers need to download an app?</h4><p>No. Workers get a plain text message and reply with their price. That&rsquo;s the whole thing &mdash; it works on any phone.</p></div>
+      <div class="os-q reveal"><h4>How do I pay the worker?</h4><p>Directly &mdash; cash, Venmo, Zelle, whatever you both agree on. onsms matches you and steps out of the money.</p></div>
+      <div class="os-q reveal"><h4>What kind of jobs can I post?</h4><p>Anything hands-on and legal &mdash; from a two-hour moving job to several days of shift coverage. If someone can show up and do it, you can post it.</p></div>
+      <div class="os-q reveal"><h4>Where is onsms available?</h4><p>Launching across Texas first &mdash; Houston, Katy, Cypress and nearby &mdash; and expanding from there. Post a job and we&rsquo;ll tell you what&rsquo;s available near you.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="os-final">
+  <div class="wrap">
+    <h2 class="reveal">Need something done today?</h2>
+    <p class="reveal">Post your job in one text and start getting offers from workers near you within minutes.</p>
+    <div class="os-cta reveal">
+      <a class="btn btn-hue" href="@@URL@@" target="_blank" rel="noopener">Post a job <span class="arrow">&rarr;</span></a>
+      <a class="btn os-btn-outline" href="@@URL@@" target="_blank" rel="noopener">Work with onsms</a>
+    </div>
+    <div class="os-note reveal">First 2 hires free &middot; then $15 per confirmed hire &middot; workers always free</div>
+  </div>
+</section>
+
+<section class="family">
+  <div class="wrap">
+    <h2 class="reveal">More from ZET8</h2>
+    <div class="mini-cards">@@MINIS@@</div>
+  </div>
+</section>
+</div>
+"""
+    return (html.replace("@@MINIS@@", minis)
+                .replace("@@URL@@", p["url"])
+                .replace("@@DOMAIN@@", p["domain"]))
+
+
 # -------------------------------------------------------------- about/contact
 ABOUT = """
 <section class="page-hero">
@@ -947,6 +1196,133 @@ def legal_content(spec, md):
 """ % (spec["hue"], spec["title"].split(" | ")[0].split(" — ", 1)[1], body)
 
 
+# ------------------------------------------------- TipShare by Ponchi landing page
+# The "website" link on the Clover App Market listing. Screenshots and art come
+# from Desktop/Zet8/tipshare/listing (web-sized copies live in tipshare/img/).
+# Scoped CSS uses the `.ts-` prefix; colours follow the TipShare logo (navy /
+# yellow / light blue) inside the site's dark theme.
+
+TIPSHARE_CSS = """
+<style>
+  .ts-hero{padding:72px 0 40px}
+  .ts-hero .wrap{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:44px;align-items:center}
+  .ts-hero h1{font-size:clamp(34px,5vw,56px);line-height:1.05;margin:10px 0 14px}
+  .ts-hero h1 em{font-style:normal;color:#F0B808}
+  .ts-hero .lead{font-size:19px;color:var(--text-2);max-width:56ch;margin:0 0 22px}
+  .ts-hero .logo{width:300px;height:300px;border-radius:28px;box-shadow:0 30px 80px -30px rgba(0,0,0,.7)}
+  .ts-badge{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line-2);background:var(--bg-2);border-radius:999px;padding:6px 14px;font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#88C8D8}
+  .ts-badge i{width:8px;height:8px;border-radius:50%;background:#F0B808;display:inline-block}
+  .ts-note{color:var(--muted);font-size:14px;margin-top:14px}
+  .ts-shot{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#0B1F3A;box-shadow:0 30px 80px -40px rgba(0,0,0,.8)}
+  .ts-shot img{display:block;width:100%;height:auto}
+  .ts-shots{display:grid;grid-template-columns:1fr;gap:28px;margin-top:8px}
+  .ts-row{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:32px;align-items:center}
+  .ts-row.flip{grid-template-columns:minmax(0,1fr) minmax(0,1.4fr)}
+  .ts-row h3{font-size:24px;margin:0 0 10px}
+  .ts-row p{color:var(--text-2);margin:0 0 10px}
+  .ts-row ul{margin:0 0 0 20px;color:var(--text-2)}
+  .ts-row li{margin:5px 0}
+  .ts-fits{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
+  .ts-fit{border:1px solid var(--line);background:var(--bg-2);border-radius:var(--radius);padding:16px 18px}
+  .ts-fit b{display:block;color:var(--cream);margin-bottom:4px}
+  .ts-fit span{color:var(--text-2);font-size:14px}
+  .ts-price{border:1px solid #F0B808;border-radius:var(--radius);padding:26px 28px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:20px;align-items:center;background:linear-gradient(135deg,rgba(240,184,8,.08),rgba(136,200,216,.06))}
+  .ts-price .amt{font-size:40px;font-weight:800;color:var(--cream);line-height:1}
+  .ts-price .amt small{font-size:16px;color:var(--text-2);font-weight:500;margin-left:6px}
+  .ts-price p{margin:8px 0 0;color:var(--text-2)}
+  .ts-phone{max-width:300px;margin:0 auto}
+  .ts-legal{color:var(--muted);font-size:13px;margin-top:28px}
+  .ts-legal a{color:#88C8D8}
+  @media(max-width:860px){.ts-hero .wrap,.ts-row,.ts-row.flip{grid-template-columns:1fr}.ts-hero .logo{width:200px;height:200px;margin:0 auto}.ts-price{grid-template-columns:1fr}}
+</style>
+"""
+
+TIPSHARE_FITS = [
+    ("Restaurants", "Servers tip out the bar and support staff; pools split by hours."),
+    ("Bars & lounges", "Different rules by night, solo weeknights, Sunday tips-based tip-outs."),
+    ("Cafés & counter service", "Card tips and the cash jar in one pool for everyone on the clock."),
+    ("Hotels & banquets", "Service charges pooled by hours across servers, captains and bartenders."),
+    ("Salons & spas", "Each provider keeps their tips; assistants and front desk as support."),
+    ("Your own rules", "Percent of sales or tips, weights, cash declared or jarred, all yours to set."),
+]
+
+
+def tipshare_content():
+    fits = "".join('<div class="ts-fit reveal"><b>%s</b><span>%s</span></div>' % f for f in TIPSHARE_FITS)
+    return TIPSHARE_CSS + """
+<div class="hue-yellow">
+<section class="ts-hero">
+  <div class="wrap">
+    <div>
+      <div class="crumbs reveal"><a href="/">Home</a><span class="sep">/</span><a href="/ponchi/">Ponchi</a><span class="sep">/</span>TipShare</div>
+      <span class="ts-badge reveal"><i></i>Clover App Market</span>
+      <h1 class="reveal d1">Tip pools and tip-outs,<br>straight from your <em>Clover sales</em>.</h1>
+      <p class="lead reveal d2">TipShare pulls every sale, card tip and gratuity from Clover, applies your house rules, and hands you a payroll-ready total for each employee every week. No spreadsheet. No arguments.</p>
+      <div class="cta-row reveal d3">
+        <a class="btn btn-hue" href="/contact/">Get notified at launch <span class="arrow">→</span></a>
+        <a class="btn btn-ghost" href="/ponchi/">See Ponchi</a>
+      </div>
+      <p class="ts-note reveal d4">Coming to the Clover App Market for U.S. merchants. $29 a month, 30-day free trial, billed through Clover.</p>
+    </div>
+    <img class="logo reveal d2" src="/tipshare/img/logo.png" alt="TipShare by Ponchi" width="300" height="300">
+  </div>
+</section>
+
+<section>
+  <div class="wrap ts-shots">
+    <div class="ts-row">
+      <div class="ts-shot reveal"><img src="/tipshare/img/shifts.jpg" alt="Every person and shift: sales, gratuity, card tips, tip-outs, net take-home" loading="lazy"></div>
+      <div class="reveal d1"><h3>One click, the whole week</h3>
+        <p>Pull the week from Clover and every sale lands on the person and shift that earned it. Morning and night split at your hour; doubles handled; hours from Clover, from Ponchi, or from a punch report.</p>
+        <ul><li>Card tips and gratuity counted as tips, service charges included</li><li>Tip-outs as a percent of sales or of tips, to a pool or to support staff</li><li>Cash tips declared per person or counted from the jar</li></ul></div>
+    </div>
+    <div class="ts-row flip">
+      <div class="reveal d1"><h3>Payroll without the argument</h3>
+        <p>Finalize the week and export it: PDF, Excel, CSV, or email it to your bookkeeper. Cash already in hand is separated from what goes through payroll.</p>
+        <ul><li>"Explain this week" writes a plain-English breakdown for any employee</li><li>Optional private tip page for each employee, showing only their own shifts</li><li>Every change is logged, so last month's payroll is always defensible</li></ul></div>
+      <div class="ts-shot reveal"><img src="/tipshare/img/payroll.jpg" alt="Payroll-ready totals per employee with cash in hand and payroll due" loading="lazy"></div>
+    </div>
+    <div class="ts-row">
+      <div class="ts-shot reveal"><img src="/tipshare/img/setup.jpg" alt="Standard setups by business type, import your current tip sheet, or a guided interview" loading="lazy"></div>
+      <div class="reveal d1"><h3>Set up in minutes, three ways</h3>
+        <p>Pick a standard setup for your kind of business, paste the tip sheet you use today and let the assistant infer your rules, or answer a short guided interview. Every path previews on a real week before you apply it.</p>
+        <p>The assistant only writes the rules; every dollar is computed by the same engine, every time.</p></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sec-head reveal"><div class="eyebrow mono"><span class="dot" style="background:#F0B808"></span>Built for</div><h2>Any place that pools or tips out</h2></div>
+    <div class="ts-fits">%(fits)s</div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="ts-row">
+      <div class="reveal"><h3>On the Clover device too</h3>
+        <p>Owners and managers see today's live numbers and this week's status right on the Flex, Mini or Station Duo. Employees logged into the device see their own tips, and only if you turn that on.</p>
+        <p>Hours come free with <a href="/ponchi/" style="color:#F0B808">Ponchi</a>, our time clock: GPS clock-ins land in every tip week automatically. A 14-day Ponchi trial starts from inside TipShare.</p></div>
+      <div class="ts-phone reveal d1"><div class="ts-shot"><img src="/tipshare/img/employee.jpg" alt="An employee's own tip page on a phone" loading="lazy"></div></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="ts-price reveal">
+      <div><div class="amt">$29<small>per month, per location</small></div>
+        <p>30-day free trial, billed through Clover, cancel any time from the App Market. No per-device fees. TipShare calculates what you configure; tip laws vary by state, so confirm your practices with a labor attorney.</p></div>
+      <a class="btn btn-hue" href="/contact/">Get notified at launch <span class="arrow">→</span></a>
+    </div>
+    <p class="ts-legal">TipShare by Ponchi is operated by Optima BuildSolutions LLC, Cypress, Texas · <a href="mailto:contact@ponchi.app">contact@ponchi.app</a> · <a href="/tipshare/privacy/">Privacy Policy</a> · <a href="/tipshare/terms/">Merchant Terms</a></p>
+  </div>
+</section>
+</div>
+""" % {"fits": fits}
+
+
 def main():
     import hashlib
     with open(os.path.join(HERE, "logo-wide-transparent-clean.png"), "rb") as f:
@@ -969,12 +1345,13 @@ def main():
                         '<script defer src="/assets/scene.js?v=%s"></script>' % scene_v)
     write("index.html", home)
 
-    # product pages
+    # product pages (OnSMS has its own bespoke landing page; the rest share one)
     for p in PRODUCTS:
         title = "%s — %s | ZET8" % (p["name"], p["tagline"].rstrip("."))
         desc = p["card"] + " " + p["pricing"] + "."
+        content = onsms_content(p) if p["slug"] == "onsms" else product_content(p)
         write("%s/index.html" % p["slug"],
-              page(title, desc, "/%s/" % p["slug"], product_content(p), logo_b64))
+              page(title, desc, "/%s/" % p["slug"], content, logo_b64))
 
     # legacy redirect: /crm/ moved when the product rebranded to HuntCustomer
     write("crm/index.html",
@@ -1002,7 +1379,13 @@ def main():
     write("404.html",
           page("Page not found | ZET8", "This page doesn't exist.", "/404.html", NOTFOUND, logo_b64))
 
-    # legal pages (TipShare by Ponchi - Clover App Market listing requirement)
+    # TipShare by Ponchi — the Clover App Market listing's website link
+    write("tipshare/index.html",
+          page("TipShare by Ponchi — Tip pools and tip-outs from your Clover sales | ZET8",
+               "TipShare turns Clover sales, card tips and gratuities into payroll-ready tip totals for every employee, every week. $29/mo, 30-day free trial, on the Clover App Market.",
+               "/tipshare/", tipshare_content(), logo_b64))
+
+    # legal pages (TipShare by Ponchi — Clover App Market listing requirement)
     for spec in LEGAL_PAGES:
         with open(os.path.join(HERE, "legal", spec["file"]), encoding="utf-8") as f:
             md = f.read()
@@ -1010,7 +1393,7 @@ def main():
               page(spec["title"], spec["desc"], "/%s/" % spec["slug"], legal_content(spec, md), logo_b64))
 
     # sitemap
-    urls = (["/"] + ["/%s/" % p["slug"] for p in PRODUCTS] + ["/about/", "/contact/"]
+    urls = (["/"] + ["/%s/" % p["slug"] for p in PRODUCTS] + ["/about/", "/contact/", "/tipshare/"]
             + ["/%s/" % s["slug"] for s in LEGAL_PAGES])
     sm = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
     sm += "".join("  <url><loc>%s%s</loc><changefreq>weekly</changefreq></url>\n" % (SITE, u) for u in urls)
