@@ -1231,11 +1231,64 @@ TIPSHARE_CSS = """
   .ts-price .amt small{font-size:16px;color:var(--text-2);font-weight:500;margin-left:6px}
   .ts-price p{margin:8px 0 0;color:var(--text-2)}
   .ts-phone{max-width:300px;margin:0 auto}
+  .ts-faq{display:grid;gap:0}
+  .ts-faq details{border-bottom:1px solid var(--line);padding:14px 0}
+  .ts-faq summary{cursor:pointer;font-weight:600;color:var(--cream);list-style:none;display:flex;justify-content:space-between;gap:16px;align-items:center}
+  .ts-faq summary::-webkit-details-marker{display:none}
+  .ts-faq summary::after{content:'+';color:#F0B808;font-size:20px;line-height:1}
+  .ts-faq details[open] summary::after{content:'2'}
+  .ts-faq p{color:var(--text-2);margin:10px 0 0;max-width:70ch}
+  .ts-support{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:8px}
+  .ts-support div{border:1px solid var(--line);background:var(--bg-2);border-radius:var(--radius);padding:16px 18px}
+  .ts-support b{display:block;color:var(--cream);margin-bottom:4px}
+  .ts-support a{color:#88C8D8}
   .ts-legal{color:var(--muted);font-size:13px;margin-top:28px}
   .ts-legal a{color:#88C8D8}
   @media(max-width:860px){.ts-hero .wrap,.ts-row,.ts-row.flip{grid-template-columns:1fr}.ts-hero .logo{width:200px;height:200px;margin:0 auto}.ts-price{grid-template-columns:1fr}}
 </style>
 """
+
+# Clover requires the support website to carry FAQs, privacy policy, terms, a support
+# email and a phone number. Set this to the number TipShare support should ring on;
+# empty leaves the phone card off the page (and prints a warning at build time).
+TIPSHARE_PHONE = ""
+
+TIPSHARE_FAQ = [
+    ("Do I need Ponchi to use TipShare?",
+     "No. TipShare works on its own using hours from the Clover time clock, or from a punch report you "
+     "upload. Ponchi is our time-clock app: if you use it, hours land in every tip period automatically, "
+     "and you can start a 14-day trial from inside TipShare."),
+    ("How do the tips get from Clover into TipShare?",
+     "TipShare reads your sales, card tips and gratuities from Clover for the period you pick, and "
+     "attributes each sale to the person and shift that rang it. Nothing is written back to Clover, and "
+     "no payment or card data is stored."),
+    ("Can it handle our house rules?",
+     "Yes. Tip-outs can be a percent of sales or of tips, from any role to a pool or to support staff; "
+     "pools split by hours with optional weights; rules can differ by day and by shift. Start from a "
+     "standard setup for your kind of business, paste the tip sheet you use today, or answer a short "
+     "guided interview. Every path previews on a real period before anything changes."),
+    ("What about cash tips?",
+     "Your choice: not tracked, declared per person per shift (managers or the employees themselves), or "
+     "one cash jar per shift split with the pool. You also say whether cash is taken home the same night "
+     "or paid through payroll, and payroll shows both separately."),
+    ("Can employees see their own tips?",
+     "Only if you turn it on. Each person then gets a private page, in English or Spanish, showing their "
+     "own shifts and totals with a plain-English explanation. Nobody sees anyone else's numbers."),
+    ("Does someone need to be at the computer?",
+     "No. Owners and managers see today's numbers and the current period on the Clover device, and the "
+     "full dashboard opens from the Clover web dashboard. A period can also be pulled automatically every "
+     "Monday with an email of anything that needs attention."),
+    ("What does it cost?",
+     "$29 per month per location with a 30-day free trial, billed through the Clover App Market. Cancel "
+     "any time from the App Market; there are no per-device fees."),
+    ("Is TipShare telling me what is legal?",
+     "No. TipShare calculates exactly what you configure and keeps a record of every change. Tip laws "
+     "vary by state, so confirm your practices with a labor attorney or your state labor department."),
+    ("What happens to my data if I uninstall?",
+     "Your periods stay available while the subscription is active. After an uninstall we delete or "
+     "de-identify the data within 90 days, and you can ask for a copy at any time by emailing us."),
+]
+
 
 TIPSHARE_FITS = [
     ("Restaurants", "Servers tip out the bar and support staff; pools split by hours."),
@@ -1249,6 +1302,14 @@ TIPSHARE_FITS = [
 
 def tipshare_content():
     fits = "".join('<div class="ts-fit reveal"><b>%s</b><span>%s</span></div>' % f for f in TIPSHARE_FITS)
+    faq_html = "".join('<details class="reveal"><summary>%s</summary><p>%s</p></details>' % f
+                       for f in TIPSHARE_FAQ)
+    digits = "".join(c for c in TIPSHARE_PHONE if c.isdigit())
+    phone_html = ('      <div class="reveal d1"><b>Phone</b><a href="tel:+1%s">%s</a><br>'
+                  '<span style="color:var(--muted);font-size:13px">Mon-Fri, 9am-6pm Central.</span></div>\n'
+                  % (digits, TIPSHARE_PHONE)) if digits else ''
+    if not digits:
+        print('  ! TIPSHARE_PHONE is empty — the Clover listing needs a support phone number')
     return TIPSHARE_CSS + """
 <div class="hue-yellow">
 <section class="ts-hero">
@@ -1316,11 +1377,28 @@ def tipshare_content():
         <p>30-day free trial, billed through Clover, cancel any time from the App Market. No per-device fees. TipShare calculates what you configure; tip laws vary by state, so confirm your practices with a labor attorney.</p></div>
       <a class="btn btn-hue" href="/contact/">Get notified at launch <span class="arrow">→</span></a>
     </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sec-head reveal"><div class="eyebrow mono"><span class="dot" style="background:#F0B808"></span>Questions</div><h2>Frequently asked</h2></div>
+    <div class="ts-faq">%(faq)s</div>
+  </div>
+</section>
+
+<section id="support">
+  <div class="wrap">
+    <div class="sec-head reveal"><div class="eyebrow mono"><span class="dot" style="background:#88C8D8"></span>Support</div><h2>Help with TipShare</h2></div>
+    <div class="ts-support">
+      <div class="reveal"><b>Email</b><a href="mailto:contact@ponchi.app">contact@ponchi.app</a><br><span style="color:var(--muted);font-size:13px">A person answers within one business day.</span></div>
+%(phone)s      <div class="reveal d2"><b>Documents</b><a href="/tipshare/privacy/">Privacy Policy</a> · <a href="/tipshare/terms/">Merchant Terms</a></div>
+    </div>
     <p class="ts-legal">TipShare by Ponchi is operated by Optima BuildSolutions LLC, Cypress, Texas · <a href="mailto:contact@ponchi.app">contact@ponchi.app</a> · <a href="/tipshare/privacy/">Privacy Policy</a> · <a href="/tipshare/terms/">Merchant Terms</a></p>
   </div>
 </section>
 </div>
-""" % {"fits": fits}
+""" % {"fits": fits, "faq": faq_html, "phone": phone_html}
 
 
 def main():
