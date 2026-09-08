@@ -1251,7 +1251,7 @@ TIPSHARE_CSS = """
 # Clover requires the support website to carry FAQs, privacy policy, terms, a support
 # email and a phone number. Set this to the number TipShare support should ring on;
 # empty leaves the phone card off the page (and prints a warning at build time).
-TIPSHARE_PHONE = ""
+TIPSHARE_PHONE = "(346) 332-6440"
 
 TIPSHARE_FAQ = [
     ("Do I need Ponchi to use TipShare?",
