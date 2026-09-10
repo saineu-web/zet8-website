@@ -128,13 +128,31 @@ PRODUCTS = [
         ],
         "pricing": "Coming soon",
     },
+    {
+        "slug": "tipshare", "name": "TipShare", "hue": "yellow", "cat": "Tips",
+        "domain": "zet8.com/tipshare", "url": "https://zet8.com/tipshare/",
+        "custom": True,          # /tipshare/ is a hand-built page, not the product template
+        "tagline": "Tips, split right, every week.",
+        "card": "Tip pools and tip-outs straight from your Clover sales — payroll-ready every week.",
+        "about": "Tip pools, tip-outs and support shares for restaurants, bars, cafés and salons — calculated from the sales and card tips already in Clover, so the tip sheet stops being a Sunday-night spreadsheet.",
+        "features": [
+            ("Straight from Clover", "Sales, card tips and gratuity arrive attributed to the person and shift that earned them."),
+            ("Your house rules", "Tip-outs on sales or tips, pools split by hours or by role, different rules by day."),
+            ("Payroll-ready", "One line per person, then PDF, Excel, Gusto or ADP — or email it to the bookkeeper."),
+            ("Everyone can check it", "A plain-English breakdown for any employee, and a private page showing only their own shifts."),
+            ("Cash and gratuity too", "Declared cash or a shift jar, service charges counted by the names you already use."),
+            ("On the Clover device", "Today's tips and the week's status on the Flex, Mini or Station Duo."),
+        ],
+        "pricing": "$29/mo · 30-day free trial · on the Clover App Market",
+    },
 ]
 
 # Display order across the whole site (nav, scene stops, cards, sitemap).
 # Lifecycle order — each app hands off to the next (the ecosystem story):
 # start the business -> find customers -> local offers -> find workers ->
 # manage workers/time -> run the money. Luuky (coming soon) closes the list.
-_ORDER = ["initor", "huntcustomer", "localsave", "onsms", "ponchi", "deskomigo", "luuky"]
+_ORDER = ["initor", "huntcustomer", "localsave", "onsms", "ponchi", "tipshare",
+          "deskomigo", "luuky"]
 PRODUCTS.sort(key=lambda p: _ORDER.index(p["slug"]))
 
 # ---------------------------------------------------------------------- css
@@ -519,6 +537,7 @@ STEP = {
     "localsave":    "Bring customers through the door",
     "onsms":        "Find workers",
     "ponchi":       "Manage the crew & the clock",
+    "tipshare":     "Split the tips",
     "deskomigo":    "Run the money & back office",
     "luuky":        "The next part of the system",
 }
@@ -526,6 +545,7 @@ STEP = {
 # Scene-card headlines: one punchy line per stop, <em> takes the product hue.
 PUNCH = {
     "ponchi":    "Clock in from<br>the <em>job site</em>.",
+    "tipshare":  "Split the tips<br><em>without the argument</em>.",
     "deskomigo": "Run the back office<br>from the <em>truck</em>.",
     "huntcustomer": "Hunt customers,<br>not <em>spreadsheets</em>.",
     "localsave": "Deals from the shop<br><em>down the street</em>.",
@@ -1168,14 +1188,16 @@ def main():
 
     # home (script URL carries a content hash so deploys bust browser caches)
     home = page("ZET8 — Tech Solutions for Businesses",
-                "ZET8 is an operating system for small business: start it with Initor, win customers with HuntCustomer and LocalSave, staff it with OnSMS and Ponchi, and run the money with Deskomigo.",
+                "ZET8 is an operating system for small business: start it with Initor, win customers with HuntCustomer and LocalSave, staff it with OnSMS and Ponchi, split the tips with TipShare, and run the money with Deskomigo.",
                 "/", home_content(logo_b64), logo_b64)
     home = home.replace('<script defer src="/assets/scene.js"></script>',
                         '<script defer src="/assets/scene.js?v=%s"></script>' % scene_v)
     write("index.html", home)
 
-    # product pages
+    # product pages ("custom" products carry a hand-built page of their own)
     for p in PRODUCTS:
+        if p.get("custom"):
+            continue
         title = "%s — %s | ZET8" % (p["name"], p["tagline"].rstrip("."))
         desc = p["card"] + " " + p["pricing"] + "."
         write("%s/index.html" % p["slug"],
@@ -1221,7 +1243,7 @@ def main():
               page(spec["title"], spec["desc"], "/%s/" % spec["slug"], legal_content(spec, md), logo_b64))
 
     # sitemap
-    urls = (["/"] + ["/%s/" % p["slug"] for p in PRODUCTS] + ["/about/", "/contact/", "/tipshare/"]
+    urls = (["/"] + ["/%s/" % p["slug"] for p in PRODUCTS] + ["/about/", "/contact/"]
             + ["/%s/" % s["slug"] for s in LEGAL_PAGES])
     sm = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
     sm += "".join("  <url><loc>%s%s</loc><changefreq>weekly</changefreq></url>\n" % (SITE, u) for u in urls)
