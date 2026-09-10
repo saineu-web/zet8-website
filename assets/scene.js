@@ -185,6 +185,27 @@
     return { vbo: buffer(gl.ARRAY_BUFFER, new Float32Array(p)), count: p.length / 3, mode: gl.LINES };
   }
 
+  // Straight tube between two points (a product's link to the rail).
+  function segmentTube(a, b, radius, vSteps) {
+    var dir = norm(sub(b, a));
+    var s1 = Math.abs(dir[1]) > 0.95 ? [1, 0, 0] : norm(cross(dir, UP));
+    var s2 = cross(s1, dir), pos = [], idx = [], i, j;
+    [a, b].forEach(function (c) {
+      for (j = 0; j <= vSteps; j++) {
+        var ang = j / vSteps * Math.PI * 2;
+        var off = add(scl(s1, Math.cos(ang) * radius), scl(s2, Math.sin(ang) * radius));
+        pos.push(c[0] + off[0], c[1] + off[1], c[2] + off[2]);
+      }
+    });
+    for (j = 0; j < vSteps; j++) {
+      var b0 = j + vSteps + 1;
+      idx.push(j, b0, j + 1, b0, b0 + 1, j + 1);
+    }
+    return { vbo: buffer(gl.ARRAY_BUFFER, new Float32Array(pos)),
+             ibo: buffer(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(idx)),
+             count: idx.length, mode: gl.TRIANGLES };
+  }
+
   // Unit quad (billboarded per frame in JS). w/h in world units, UVs for tex.
   function quad(w, h, z) {
     var x = w / 2, y = h / 2;
@@ -306,8 +327,15 @@
     var base = curveAt(u), tan = tangentAt(u);
     var side = norm(cross(tan, UP));
     var center = add(add(base, scl(side, SIDE_OFF)), scl(UP, UP_OFF));
+    // The "8" bends opposite ways on its two lobes, so a panel beside the track
+    // sits inside one loop and outside the other. A short arm from the rail to
+    // the panel's nearest edge keeps every product on the same yellow line.
+    var halfW = 8 * PS, halfH = 9.875 * PS;
+    var edge = add(add(center, scl(side, -Math.min(SIDE_OFF, halfW))), scl(UP, -Math.min(UP_OFF, halfH)));
     var node = {
       center: center,
+      stem: segmentTube(base, edge, 0.28, 8),
+      stemGlow: segmentTube(base, edge, 1.1, 8),
       seed: i * 1.7,
       hex: p.hex,
       rgb: hexRGB(p.hex),
@@ -466,6 +494,10 @@
     gl.depthMask(false);
     drawFlat(rail, mvpI, view, accentRGB, 0.5, 1);
     drawFlat(railGlow, mvpI, view, accentRGB, 0.05, 1);
+    nodes.forEach(function (n) {
+      drawFlat(n.stem, mvpI, view, accentRGB, 0.5, 1);
+      drawFlat(n.stemGlow, mvpI, view, accentRGB, 0.05, 1);
+    });
     drawFlat(gridLines, mvpI, view, accentRGB, 0.06, 1);
     drawFlat(dust, mvpI, view, creamRGB, 0.35, 2.2);
     nodes.forEach(function (n) {
