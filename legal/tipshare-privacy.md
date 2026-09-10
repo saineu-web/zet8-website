@@ -124,5 +124,5 @@ effective date and, for material changes, notify merchants through the App or by
 ## 10. Contact
 
 Optima BuildSolutions LLC
-18419 W Willow Oak Bend Dr, Cypress, TX 77433
+12320 Barker Cypress Rd, Ste 600 #199, Cypress, TX 77429
 contact@ponchi.app · https://zet8.com

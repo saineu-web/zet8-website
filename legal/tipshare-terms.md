@@ -138,4 +138,4 @@ after the effective date constitutes acceptance.
 
 ## 14. Contact
 
-Optima BuildSolutions LLC · 18419 W Willow Oak Bend Dr, Cypress, TX 77433 · contact@ponchi.app · https://zet8.com
+Optima BuildSolutions LLC · 12320 Barker Cypress Rd, Ste 600 #199, Cypress, TX 77429 · contact@ponchi.app · https://zet8.com
