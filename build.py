@@ -1094,7 +1094,7 @@ def tipshare_content():
         <a class="btn btn-hue" href="/contact/">Get notified at launch <span class="arrow">→</span></a>
         <a class="btn btn-ghost" href="/ponchi/">See Ponchi</a>
       </div>
-      <p class="ts-note reveal d4">Coming to the Clover App Market for U.S. merchants. $29 a month, 30-day free trial, billed through Clover.</p>
+      <p class="ts-note reveal d4">Coming to the Clover App Market for U.S. merchants. $29 a month, 30-day free trial, billed through Clover. <a href="/tipshare/guide/" style="color:#88C8D8">Read the user guide →</a></p>
     </div>
     <img class="logo reveal d2" src="/tipshare/img/logo.png" alt="TipShare by Ponchi" width="300" height="300">
   </div>
@@ -1103,21 +1103,21 @@ def tipshare_content():
 <section>
   <div class="wrap ts-shots">
     <div class="ts-row">
-      <div class="ts-shot reveal"><img src="/tipshare/img/shifts.jpg" alt="Every person and shift: sales, gratuity, card tips, tip-outs, net take-home" loading="lazy"></div>
+      <div class="ts-shot reveal"><img src="/tipshare/img/shifts.jpg" alt="This period in three steps: get the period, check what needs you, approve and pay" loading="lazy"></div>
       <div class="reveal d1"><h3>One click, the whole week</h3>
         <p>Pull the week from Clover and every sale lands on the person and shift that earned it. Morning and night split at your hour; doubles handled; hours from Clover, from Ponchi, or from a punch report.</p>
         <ul><li>Card tips and gratuity counted as tips, service charges included</li><li>Tip-outs as a percent of sales or of tips, to a pool or to support staff</li><li>Cash tips declared per person or counted from the jar</li></ul></div>
     </div>
     <div class="ts-row flip">
       <div class="reveal d1"><h3>Payroll without the argument</h3>
-        <p>Finalize the week and export it: PDF, Excel, CSV, or email it to your bookkeeper. Cash already in hand is separated from what goes through payroll.</p>
+        <p>Finalize the week and export it: PDF, Excel, a Gusto or ADP file, or email it to your bookkeeper. Cash already in hand is separated from what goes through payroll.</p>
         <ul><li>"Explain this week" writes a plain-English breakdown for any employee</li><li>Optional private tip page for each employee, showing only their own shifts</li><li>Every change is logged, so last month's payroll is always defensible</li></ul></div>
-      <div class="ts-shot reveal"><img src="/tipshare/img/payroll.jpg" alt="Payroll-ready totals per employee with cash in hand and payroll due" loading="lazy"></div>
+      <div class="ts-shot reveal"><img src="/tipshare/img/payroll.jpg" alt="Payroll: one line per person with hours and earnings, ready to export" loading="lazy"></div>
     </div>
     <div class="ts-row">
-      <div class="ts-shot reveal"><img src="/tipshare/img/setup.jpg" alt="Standard setups by business type, import your current tip sheet, or a guided interview" loading="lazy"></div>
-      <div class="reveal d1"><h3>Set up in minutes, three ways</h3>
-        <p>Pick a standard setup for your kind of business, paste the tip sheet you use today and let the assistant infer your rules, or answer a short guided interview. Every path previews on a real week before you apply it.</p>
+      <div class="ts-shot reveal"><img src="/tipshare/img/setup.jpg" alt="The setup preview: what every person would be paid under your answers, before saving" loading="lazy"></div>
+      <div class="reveal d1"><h3>Set up with four questions</h3>
+        <p>Say how often tips settle, what happens to cash, and how tips are shared: by hours, by role, or a standard setup for your kind of business. TipShare shows what those answers would pay every person on a real week before anything is saved.</p>
         <p>The assistant only writes the rules; every dollar is computed by the same engine, every time.</p></div>
     </div>
   </div>
@@ -1136,7 +1136,7 @@ def tipshare_content():
       <div class="reveal"><h3>On the Clover device too</h3>
         <p>Owners and managers see today's live numbers and this week's status right on the Flex, Mini or Station Duo. Employees logged into the device see their own tips, and only if you turn that on.</p>
         <p>Hours come free with <a href="/ponchi/" style="color:#F0B808">Ponchi</a>, our time clock: GPS clock-ins land in every tip week automatically. A 14-day Ponchi trial starts from inside TipShare.</p></div>
-      <div class="ts-phone reveal d1"><div class="ts-shot"><img src="/tipshare/img/employee.jpg" alt="An employee's own tip page on a phone" loading="lazy"></div></div>
+      <div class="ts-phone reveal d1"><div class="ts-shot"><img src="/tipshare/img/employee.jpg" alt="Today's tips on the Clover Flex" loading="lazy"></div></div>
     </div>
   </div>
 </section>
@@ -1170,6 +1170,141 @@ def tipshare_content():
 </section>
 </div>
 """ % {"fits": fits, "faq": faq_html, "phone": phone_html}
+
+
+# The user guide: every step of TipShare with a real screenshot. The PDF linked from it
+# (tipshare/TipShare-User-Guide.pdf) is printed from this page by
+# Desktop/Zet8/tipshare/tools/screenshots/guide_pdf.py; reprint it after changing this.
+TIPSHARE_GUIDE_CSS = """
+<style>
+  .tg-hero{padding:64px 0 24px}
+  .tg-hero h1{font-size:clamp(32px,4.6vw,52px);line-height:1.06;margin:10px 0 12px}
+  .tg-hero h1 em{font-style:normal;color:#F0B808}
+  .tg-hero .lead{font-size:18px;color:var(--text-2);max-width:62ch;margin:0 0 20px}
+  .tg-toc{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:8px 18px;margin:22px 0 0;padding:0;list-style:none;counter-reset:tg}
+  .tg-toc li{counter-increment:tg}
+  .tg-toc a{color:var(--text-2);text-decoration:none;font-size:15px}
+  .tg-toc a::before{content:counter(tg, decimal-leading-zero) "  ";font-family:var(--mono);color:#F0B808;font-size:12px}
+  .tg-step{padding:44px 0;border-top:1px solid var(--line)}
+  .tg-step .num{font-family:var(--mono);font-size:12px;letter-spacing:.08em;color:#F0B808;text-transform:uppercase}
+  .tg-step h2{font-size:clamp(24px,3vw,32px);margin:6px 0 12px}
+  .tg-step p{color:var(--text-2);max-width:74ch;margin:0 0 10px}
+  .tg-step ol,.tg-step ul{color:var(--text-2);margin:0 0 12px 22px;max-width:74ch}
+  .tg-step li{margin:6px 0}
+  .tg-step b{color:var(--cream)}
+  .tg-step a{color:#88C8D8}
+  .tg-shot{margin-top:20px}
+  .tg-devices{display:grid;grid-template-columns:minmax(0,240px) minmax(0,240px) minmax(0,1fr);gap:18px;align-items:start;margin-top:20px}
+  @media(max-width:860px){.tg-devices{grid-template-columns:1fr 1fr}.tg-devices .land{grid-column:1/-1}}
+  @media print{
+    html,body{background:#fff!important;color:#111!important}
+    header,nav,footer,.foot,.foot-bottom,.crumbs,.cta-row,.tg-no-print{display:none!important}
+    .reveal{opacity:1!important;transform:none!important}
+    .tg-hero{padding:0 0 8px}
+    .tg-hero h1,.tg-step h2,.tg-step b{color:#001934!important}
+    .tg-hero .lead,.tg-step p,.tg-step li,.tg-toc a{color:#333!important}
+    .tg-step{border-top:1px solid #ddd;padding:16px 0;break-inside:avoid;page-break-inside:avoid}
+    .ts-shot{box-shadow:none!important;border-color:#ccc!important;background:#fff!important}
+    .tg-step a{color:#001934!important}
+    .tg-devices{grid-template-columns:1fr 1fr 1.7fr!important;gap:12px!important}
+    .tg-devices .land{grid-column:auto!important}
+  }
+</style>
+"""
+
+
+def _guide_shot(name, alt):
+    return ('<div class="ts-shot tg-shot reveal"><img src="/tipshare/img/guide/' + name
+            + '.jpg" alt="' + alt + '" loading="lazy"></div>')
+
+
+def tipshare_guide_content():
+    steps = [
+        ("install", "Install and open TipShare", """
+      <p>Install TipShare from the Clover App Market, then open it from your Clover web dashboard under <b>My Apps → TipShare</b>. Clover signs you in, so there is no separate password. Owners and managers get the full dashboard.</p>
+      <p>The dashboard has four tabs: <b>This period</b>, <b>Payroll</b>, <b>Settings</b> and <b>Help me set up</b>.</p>""", ""),
+        ("setup", "Answer four setup questions", """
+      <p>The first time you open TipShare, a short setup asks four things:</p>
+      <ol><li>What to call your tip policy.</li>
+        <li>How often tips settle: each shift, each day, or each pay period.</li>
+        <li>What happens to cash tips: card tips only, each person declares their cash, or one cash jar per shift.</li>
+        <li>How tips are shared: split evenly by hours, split by role, everyone keeps their own, or <b>My rules are different by day</b>, which starts from a standard setup for your kind of business.</li></ol>
+      <p>Then tick who shares the tips and confirm each person's role.</p>""",
+         _guide_shot("01-setup-wizard", "The setup question: how are tips shared?")),
+        ("preview", "See what it would pay before you save", """
+      <p>The last setup screen runs your answers against a real week: each person's pay today next to what they would get with your answers, and the total collected against the total paid out.</p>
+      <p>Nothing changes until you press <b>Save</b>. You can open the setup again any time from <b>Help me set up</b>.</p>""",
+         _guide_shot("02-setup-preview", "The setup preview: each person's pay now and with these answers")),
+        ("period", "Get the period, check it, approve it", """
+      <p><b>This period</b> works in three steps:</p>
+      <ol><li><b>Get the period.</b> Pick the dates or press <b>Last week</b>. TipShare pulls sales, card tips and gratuity from Clover, and hours from the Clover time clock, from Ponchi, or from a punch report you upload.</li>
+        <li><b>Check what needs you.</b> Anything that would pay someone wrong is grouped by cause, with one button to fix it. When nothing needs you, it says <b>Everything checks out</b>.</li>
+        <li><b>Approve and pay.</b> Tips collected and paid to the team, side by side.</li></ol>""",
+         _guide_shot("03-this-period", "This period: everything checks out, collected and paid side by side")),
+        ("shifts", "Every shift, line by line", """
+      <p>Open <b>Every shift, line by line</b> to see each person's hours, clock times, sales, gratuity, card tips, tip-outs and take-home for every shift. Press <b>Edit</b> on a shift to change a role or a number; the totals recalculate straight away.</p>
+      <ul><li>A role set on one shift changes only that shift, so someone can tend bar on Monday and bus tables on Friday.</li>
+        <li><b>Support staff and pools</b> shows who worked support and how each pool was split. If nobody worked support on a shift, choose what happens to that money.</li>
+        <li><b>Start this period over</b> throws away every hand edit and rebuilds the period from Clover and your punch file.</li></ul>""",
+         _guide_shot("04-every-shift", "Every shift, line by line: hours, sales, tips, tip-outs and take-home")),
+        ("payroll", "Payroll: one line per person", """
+      <p><b>Payroll</b> shows the total to pay out, then one line per person with their hours and earnings.</p>
+      <p>Export it as a <b>PDF</b>, <b>Excel</b>, a <b>Gusto CSV</b>, an <b>ADP</b> paydata file or a plain CSV, print it, or email it to your bookkeeper. Press <b>Finalize period</b> when it is right.</p>""",
+         _guide_shot("05-payroll", "Payroll: one line per person with hours and earnings")),
+        ("explain", "Explain anyone's pay", """
+      <p>Open a person to see where their money came from: their own shifts, their share of the tip pool and any support payouts, then every shift behind it.</p>
+      <p><b>Explain in plain English</b> writes a breakdown you can copy and hand to the employee.</p>""",
+         _guide_shot("06-payroll-person", "One person opened, with the plain-English explanation")),
+        ("settings", "Your house rules", """
+      <p><b>Settings</b> holds the rules behind every number: tip-outs as a percent of sales or of tips, who receives the tip pool, the schedule of rules by day, support slots and how the support pool splits, cash tips, the card fee, the names your gratuity lines use, sales left out of tip-outs, your employees, and a history log of every change.</p>""",
+         _guide_shot("07-settings-rules", "Settings: tip-outs, pool receivers and the weekly schedule")),
+        ("employees", "Each employee's own tip page", """
+      <p>Turn on employee tip pages in <b>Settings</b> and each person gets a private link that shows only their own shifts and totals, in English or Spanish.</p>""",
+         _guide_shot("08-employee-page", "An employee's own tip page")),
+        ("device", "On the Clover device", """
+      <p>Open TipShare on the Clover Flex, Mini or Station Duo. Owners and managers see today's tips live and this week's status. Employees logged into the device see only their own numbers, and only if you turned employee pages on.</p>""",
+         '<div class="tg-devices">'
+         '<div class="ts-shot reveal"><img src="/tipshare/img/guide/09-device-today.jpg" alt="Today on the Clover Flex" loading="lazy"></div>'
+         '<div class="ts-shot reveal"><img src="/tipshare/img/guide/10-device-week.jpg" alt="This week on the Clover Flex" loading="lazy"></div>'
+         '<div class="ts-shot reveal land"><img src="/tipshare/img/guide/11-device-landscape.jpg" alt="Today on a Clover Mini or Station Duo" loading="lazy"></div>'
+         '</div>'),
+    ]
+    toc = "".join('<li><a href="#' + a + '">' + title + '</a></li>' for a, title, _, _ in steps)
+    section = ('\n<section class="tg-step" id="{a}">\n  <div class="wrap">\n'
+               '    <div class="num reveal">Step {n:02d}</div>\n'
+               '    <h2 class="reveal">{title}</h2>\n'
+               '    <div class="reveal">{text}</div>\n'
+               '    {shot}\n  </div>\n</section>')
+    body = "".join(section.format(a=a, n=i + 1, title=title, text=text, shot=shot)
+                   for i, (a, title, text, shot) in enumerate(steps))
+    help_html = ('\n<section class="tg-step" id="help">\n  <div class="wrap">\n'
+                 '    <div class="num reveal">Help</div>\n'
+                 '    <h2 class="reveal">Questions and support</h2>\n'
+                 '    <p class="reveal">Email <a href="mailto:contact@ponchi.app">contact@ponchi.app</a> or call '
+                 + TIPSHARE_PHONE + ', Monday to Friday, 9am to 6pm Central. Common questions are answered on the '
+                 '<a href="/tipshare/">TipShare page</a>.</p>\n'
+                 '    <p class="ts-legal reveal">TipShare calculates what you configure. Tip laws vary by state, so '
+                 'confirm your practices with a labor attorney or your state labor department. '
+                 '<a href="/tipshare/privacy/">Privacy Policy</a> · <a href="/tipshare/terms/">Merchant Terms</a></p>\n'
+                 '  </div>\n</section>')
+    return TIPSHARE_CSS + TIPSHARE_GUIDE_CSS + """
+<div class="hue-yellow">
+<section class="tg-hero">
+  <div class="wrap">
+    <div class="crumbs reveal"><a href="/">Home</a><span class="sep">/</span><a href="/tipshare/">TipShare</a><span class="sep">/</span>User guide</div>
+    <span class="ts-badge reveal"><i></i>User guide</span>
+    <h1 class="reveal d1">TipShare, <em>step by step</em>.</h1>
+    <p class="lead reveal d2">From install to payroll: set up your tip rules, pull a period from Clover, fix what needs you, and export payroll. Every screenshot is the real app.</p>
+    <div class="cta-row reveal d3 tg-no-print">
+      <a class="btn btn-hue" href="/tipshare/TipShare-User-Guide.pdf">Download the PDF <span class="arrow">→</span></a>
+      <a class="btn btn-ghost" href="/tipshare/">About TipShare</a>
+    </div>
+    <ol class="tg-toc reveal d3">""" + toc + """</ol>
+  </div>
+</section>
+""" + body + help_html + """
+</div>
+"""
 
 
 def main():
@@ -1235,6 +1370,12 @@ def main():
                "TipShare turns Clover sales, card tips and gratuities into payroll-ready tip totals for every employee, every week. $29/mo, 30-day free trial, on the Clover App Market.",
                "/tipshare/", tipshare_content(), logo_b64))
 
+    # TipShare user guide (the PDF beside it is printed from this page)
+    write("tipshare/guide/index.html",
+          page("TipShare by Ponchi — User Guide | ZET8",
+               "How to set up TipShare, pull a tip period from Clover, fix what needs you and export payroll, every step with a screenshot.",
+               "/tipshare/guide/", tipshare_guide_content(), logo_b64))
+
     # legal pages (TipShare by Ponchi — Clover App Market listing requirement)
     for spec in LEGAL_PAGES:
         with open(os.path.join(HERE, "legal", spec["file"]), encoding="utf-8") as f:
@@ -1244,7 +1385,7 @@ def main():
 
     # sitemap
     urls = (["/"] + ["/%s/" % p["slug"] for p in PRODUCTS] + ["/about/", "/contact/"]
-            + ["/%s/" % s["slug"] for s in LEGAL_PAGES])
+            + ["/%s/" % s["slug"] for s in LEGAL_PAGES] + ["/tipshare/guide/"])
     sm = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
     sm += "".join("  <url><loc>%s%s</loc><changefreq>weekly</changefreq></url>\n" % (SITE, u) for u in urls)
     sm += "</urlset>\n"
