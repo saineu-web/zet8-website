@@ -452,7 +452,7 @@ def footer():
       <div class="links">%s<a href="/about/">About Us</a><a href="/contact/">Contact Us</a></div>
       <div class="color-bar"><span></span><span></span><span></span><span></span></div>
     </div>
-    <div class="foot-bottom"><span>© 2026 ZET8 · all rights reserved</span><span>Houston, Texas · zet8.com</span></div>
+    <div class="foot-bottom"><span>© 2026 ZET8 · all rights reserved</span><span>Cypress, TX · zet8.com</span></div>
   </div>
 </footer>
 """ % plinks
@@ -491,7 +491,7 @@ def head(title, desc, path):
   "logo": "%(site)s/logo.png",
   "description": "ZET8 makes finished, ready-to-use apps for small businesses — Ponchi workforce management, Deskomigo mobile back office, HuntCustomer sales CRM, LocalSave local deals, OnSMS text-based hiring, and Initor business launch.",
   "email": "hello@zet8.com",
-  "address": {"@type": "PostalAddress","addressLocality": "Houston","addressRegion": "TX","addressCountry": "US"},
+  "address": {"@type": "PostalAddress","streetAddress": "12320 Barker Cypress Rd, Ste 600 #199","addressLocality": "Cypress","addressRegion": "TX","postalCode": "77429","addressCountry": "US"},
   "parentOrganization": {"@type": "Organization","name": "Optima Buildsolutions LLC"},
   "sameAs": ["https://ponchi.app","https://deskomigo.com","https://huntcustomer.com","https://localsave.com","https://onsms.com","https://initor.com"]
 }
@@ -979,7 +979,7 @@ ABOUT = """
       <p><b>We build for the phone in your pocket.</b> Your office is a truck cab, a counter, a job site. Everything we ship works one-handed on a phone first — in English and Español.</p>
       <p><b>We use AI where it erases busywork.</b> Scanning receipts, drafting summaries, flagging follow-ups — not another chatbot between you and your work.</p>
       <p><b>Together, they're one system.</b> Start a business with Initor. Find customers with HuntCustomer and bring them through the door with LocalSave. Find workers with OnSMS, run the crew with Ponchi, and run the money with Deskomigo. Each app hands off to the next — an operating system for small business.</p>
-      <p class="legal-note">ZET8 is operated by Optima Buildsolutions LLC · Houston, Texas</p>
+      <p class="legal-note">ZET8 is operated by Optima Buildsolutions LLC · 12320 Barker Cypress Rd, Ste 600 #199, Cypress, TX 77429</p>
     </div>
   </div>
 </section>
@@ -1012,7 +1012,7 @@ CONTACT = """
       <div class="reveal">
         <div class="cinfo">
           <div class="row"><div class="ico">✉</div><div><b>hello@zet8.com</b><span>Reply within 1 business day</span></div></div>
-          <div class="row"><div class="ico">◎</div><div><b>Houston, Texas</b><span>Remote-first · EN &amp; ES</span></div></div>
+          <div class="row"><div class="ico">◎</div><div><b>12320 Barker Cypress Rd, Ste 600 #199, Cypress, TX 77429</b><span>Remote-first · EN &amp; ES</span></div></div>
         </div>
       </div>
       <div class="reveal d1">
@@ -1190,7 +1190,7 @@ def legal_content(spec, md):
 <section style="padding-top:18px">
   <div class="wrap legal">
 %s
-    <p class="legal-note" style="margin-top:36px">TipShare by Ponchi is operated by Optima BuildSolutions LLC · Cypress, Texas · <a href="mailto:contact@ponchi.app">contact@ponchi.app</a> · <a href="/tipshare/privacy/">Privacy Policy</a> · <a href="/tipshare/terms/">Merchant Terms</a></p>
+    <p class="legal-note" style="margin-top:36px">TipShare by Ponchi is operated by Optima BuildSolutions LLC · 12320 Barker Cypress Rd, Ste 600 #199, Cypress, TX 77429 · <a href="mailto:contact@ponchi.app">contact@ponchi.app</a> · <a href="/tipshare/privacy/">Privacy Policy</a> · <a href="/tipshare/terms/">Merchant Terms</a></p>
   </div>
 </section>
 """ % (spec["hue"], spec["title"].split(" | ")[0].split(" — ", 1)[1], body)
@@ -1394,7 +1394,7 @@ def tipshare_content():
       <div class="reveal"><b>Email</b><a href="mailto:contact@ponchi.app">contact@ponchi.app</a><br><span style="color:var(--muted);font-size:13px">A person answers within one business day.</span></div>
 %(phone)s      <div class="reveal d2"><b>Documents</b><a href="/tipshare/privacy/">Privacy Policy</a> · <a href="/tipshare/terms/">Merchant Terms</a></div>
     </div>
-    <p class="ts-legal">TipShare by Ponchi is operated by Optima BuildSolutions LLC, Cypress, Texas · <a href="mailto:contact@ponchi.app">contact@ponchi.app</a> · <a href="/tipshare/privacy/">Privacy Policy</a> · <a href="/tipshare/terms/">Merchant Terms</a></p>
+    <p class="ts-legal">TipShare by Ponchi is operated by Optima BuildSolutions LLC, 12320 Barker Cypress Rd, Ste 600 #199, Cypress, TX 77429 · <a href="mailto:contact@ponchi.app">contact@ponchi.app</a> · <a href="/tipshare/privacy/">Privacy Policy</a> · <a href="/tipshare/terms/">Merchant Terms</a></p>
   </div>
 </section>
 </div>
