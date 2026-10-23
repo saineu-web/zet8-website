@@ -244,7 +244,10 @@
 
     // name + tagline
     x.fillStyle = '#F4F1EA';
-    x.font = '700 62px ' + disp;
+    var nameSize = 62;   // shrink long names ("Posting Station") to fit the card
+    do {
+      x.font = '700 ' + nameSize + 'px ' + disp;
+    } while (x.measureText(p.name).width > W - 80 && --nameSize > 30);
     x.fillText(p.name, 40, 208);
     x.font = '500 27px ' + disp;
     x.fillStyle = p.hex;
@@ -300,7 +303,7 @@
   // identical at every stop by construction. The lemniscate rail remains the
   // single yellow line tying the journey together.
   var NARROW = window.innerWidth < 860;
-  var PS = NARROW ? 0.5 : 0.85;
+  var PS = NARROW ? 0.44 : 0.85;
   var PANEL_DIST = 22;
   var fovInit = (NARROW ? 68 : 56) * Math.PI / 180;
   var visHalfW = Math.tan(fovInit / 2) * (window.innerWidth / Math.max(1, window.innerHeight)) * PANEL_DIST;
@@ -309,7 +312,8 @@
   // narrow windows so it never leaves the frame, but never closer to the rail
   // than its own half-width plus clearance. Portrait: centered, upper half.
   var PANEL_RX = NARROW ? 0 : Math.max(PANEL_HALF_W + 1.5, Math.min(10, visHalfW - PANEL_HALF_W - 1));
-  var PANEL_RY = NARROW ? 6.0 : 2.5;
+  // Portrait: just under the nav, clear of the HTML text card below it.
+  var PANEL_RY = NARROW ? 7.0 : 2.5;
   var screenQuad = quad(15 * PS, 18.75 * PS, 0);
   var backQuad = quad(16 * PS, 19.75 * PS, -0.25);
   var nodes = products.map(function (p, i) {
@@ -328,7 +332,7 @@
       seed: i * 1.7,
       hex: p.hex,
       rgb: hexRGB(p.hex),
-      ring: ringLines(center, NARROW ? 5.8 : 10.2, Math.PI / 2.3),
+      ring: ringLines(center, NARROW ? 5.1 : 10.2, Math.PI / 2.3),
       tex: textureFrom(drawPanel(p))
     };
     return node;

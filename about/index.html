@@ -32,7 +32,7 @@
   "email": "hello@zet8.com",
   "address": {"@type": "PostalAddress","streetAddress": "12320 Barker Cypress Rd, Ste 600 #199","addressLocality": "Cypress","addressRegion": "TX","postalCode": "77429","addressCountry": "US"},
   "parentOrganization": {"@type": "Organization","name": "Optima BuildSolutions LLC"},
-  "sameAs": ["https://ponchi.app","https://deskomigo.com","https://huntcustomer.com","https://localsave.com","https://onsms.com","https://initor.com"]
+  "sameAs": ["https://ponchi.app","https://deskomigo.com","https://huntcustomer.com","https://localsave.com","https://onsms.com","https://initor.com","https://postingstation.app"]
 }
 </script>
 <style>
@@ -256,7 +256,11 @@
   .color-bar span:nth-child(4){background:var(--blue)}
 
   @media(max-width:900px){
-    .scard{top:auto;bottom:112px;transform:none;left:24px;right:24px;width:auto}
+    .scard{top:auto;bottom:92px;transform:none;left:24px;right:24px;width:auto}
+    .scard h2{font-size:clamp(26px,7.4vw,34px);margin-bottom:10px}
+    .scard .eyebrow2{margin-bottom:12px}
+    .scard p{font-size:.88rem;line-height:1.5}
+    .scard .meta{margin-top:14px}
     .scard-center{left:50%;right:auto;bottom:auto;top:50%;transform:translate(-50%,-50%);width:min(720px,86vw)}
     .scard p{max-width:none}
     .minimap{display:none!important}
@@ -286,7 +290,7 @@
       <div class="nav-links" id="navLinks">
         <div class="dd" id="dd">
           <button class="dd-btn" id="ddBtn" aria-haspopup="true">Products <span class="caret">▼</span></button>
-          <div class="dd-menu"><a class="hue-blue" href="/initor/"><span class="dot"></span>Initor<small>initor.com</small></a><a class="hue-blue" href="/huntcustomer/"><span class="dot"></span>HuntCustomer<small>huntcustomer.com</small></a><a class="hue-red" href="/localsave/"><span class="dot"></span>LocalSave<small>localsave.com</small></a><a class="hue-green" href="/onsms/"><span class="dot"></span>OnSMS<small>onsms.com</small></a><a class="hue-yellow" href="/ponchi/"><span class="dot"></span>Ponchi<small>ponchi.app</small></a><a class="hue-yellow" href="/tipshare/"><span class="dot"></span>TipShare<small>zet8.com/tipshare</small></a><a class="hue-green" href="/deskomigo/"><span class="dot"></span>Deskomigo<small>deskomigo.com</small></a><a class="hue-red" href="/luuky/"><span class="dot"></span>Luuky<small>coming soon</small></a></div>
+          <div class="dd-menu"><a class="hue-blue" href="/initor/"><span class="dot"></span>Initor<small>initor.com</small></a><a class="hue-green" href="/postingstation/"><span class="dot"></span>Posting Station<small>postingstation.app</small></a><a class="hue-blue" href="/huntcustomer/"><span class="dot"></span>HuntCustomer<small>huntcustomer.com</small></a><a class="hue-red" href="/localsave/"><span class="dot"></span>LocalSave<small>localsave.com</small></a><a class="hue-green" href="/onsms/"><span class="dot"></span>OnSMS<small>onsms.com</small></a><a class="hue-yellow" href="/ponchi/"><span class="dot"></span>Ponchi<small>ponchi.app</small></a><a class="hue-yellow" href="/tipshare/"><span class="dot"></span>TipShare<small>zet8.com/tipshare</small></a><a class="hue-green" href="/deskomigo/"><span class="dot"></span>Deskomigo<small>deskomigo.com</small></a><a class="hue-red" href="/luuky/"><span class="dot"></span>Luuky<small>coming soon</small></a></div>
         </div>
         <a href="/about/" class="lnk" aria-current="page">About Us</a>
         <a href="/contact/" class="btn btn-primary">Contact Us</a>
@@ -314,7 +318,7 @@
       <p><b>We don't do custom projects.</b> Every ZET8 product is a finished app you can sign up for today — born from real problems we watched real businesses fight: time theft on job sites, invoices written at midnight, leads going cold in spreadsheets, empty shifts with no one to call.</p>
       <p><b>We build for the phone in your pocket.</b> Your office is a truck cab, a counter, a job site. Everything we ship works one-handed on a phone first — in English and Español.</p>
       <p><b>We use AI where it erases busywork.</b> Scanning receipts, drafting summaries, flagging follow-ups — not another chatbot between you and your work.</p>
-      <p><b>Together, they're one system.</b> Start a business with Initor. Find customers with HuntCustomer and bring them through the door with LocalSave. Find workers with OnSMS, run the crew with Ponchi, and run the money with Deskomigo. Each app hands off to the next — an operating system for small business.</p>
+      <p><b>Together, they're one system.</b> Start a business with Initor and get the word out with Posting Station. Find customers with HuntCustomer and bring them through the door with LocalSave. Find workers with OnSMS, run the crew with Ponchi, split the tips with TipShare, and run the money with Deskomigo. Each app hands off to the next — an operating system for small business.</p>
       <p class="legal-note">ZET8 is operated by Optima BuildSolutions LLC · 12320 Barker Cypress Rd, Ste 600 #199, Cypress, TX 77429</p>
     </div>
   </div>
@@ -322,7 +326,7 @@
 <section class="family" style="padding-top:0">
   <div class="wrap">
     <h2 class="reveal">The ZET8 family</h2>
-    <div class="mini-cards"><a class="mini hue-blue" href="/initor/"><b>Initor</b><span>Business launch</span></a><a class="mini hue-blue" href="/huntcustomer/"><b>HuntCustomer</b><span>Sales</span></a><a class="mini hue-red" href="/localsave/"><b>LocalSave</b><span>Local commerce</span></a><a class="mini hue-green" href="/onsms/"><b>OnSMS</b><span>Hiring</span></a><a class="mini hue-yellow" href="/ponchi/"><b>Ponchi</b><span>Workforce</span></a><a class="mini hue-yellow" href="/tipshare/"><b>TipShare</b><span>Tips</span></a><a class="mini hue-green" href="/deskomigo/"><b>Deskomigo</b><span>Back office</span></a><a class="mini hue-red" href="/luuky/"><b>Luuky</b><span>Coming soon</span></a></div>
+    <div class="mini-cards"><a class="mini hue-blue" href="/initor/"><b>Initor</b><span>Business launch</span></a><a class="mini hue-green" href="/postingstation/"><b>Posting Station</b><span>Marketing</span></a><a class="mini hue-blue" href="/huntcustomer/"><b>HuntCustomer</b><span>Sales</span></a><a class="mini hue-red" href="/localsave/"><b>LocalSave</b><span>Local commerce</span></a><a class="mini hue-green" href="/onsms/"><b>OnSMS</b><span>Hiring</span></a><a class="mini hue-yellow" href="/ponchi/"><b>Ponchi</b><span>Workforce</span></a><a class="mini hue-yellow" href="/tipshare/"><b>TipShare</b><span>Tips</span></a><a class="mini hue-green" href="/deskomigo/"><b>Deskomigo</b><span>Back office</span></a><a class="mini hue-red" href="/luuky/"><b>Luuky</b><span>Coming soon</span></a></div>
   </div>
 </section>
 <section class="cta-band">
@@ -336,7 +340,7 @@
 <footer>
   <div class="wrap">
     <div class="foot">
-      <div class="links"><a href="/initor/">Initor</a><a href="/huntcustomer/">HuntCustomer</a><a href="/localsave/">LocalSave</a><a href="/onsms/">OnSMS</a><a href="/ponchi/">Ponchi</a><a href="/tipshare/">TipShare</a><a href="/deskomigo/">Deskomigo</a><a href="/luuky/">Luuky</a><a href="/about/">About Us</a><a href="/contact/">Contact Us</a></div>
+      <div class="links"><a href="/initor/">Initor</a><a href="/postingstation/">Posting Station</a><a href="/huntcustomer/">HuntCustomer</a><a href="/localsave/">LocalSave</a><a href="/onsms/">OnSMS</a><a href="/ponchi/">Ponchi</a><a href="/tipshare/">TipShare</a><a href="/deskomigo/">Deskomigo</a><a href="/luuky/">Luuky</a><a href="/about/">About Us</a><a href="/contact/">Contact Us</a></div>
       <div class="color-bar"><span></span><span></span><span></span><span></span></div>
     </div>
     <div class="foot-bottom"><span>© 2026 ZET8 · all rights reserved</span><span>Cypress, TX · zet8.com</span></div>

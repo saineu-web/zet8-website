@@ -145,14 +145,30 @@ PRODUCTS = [
         ],
         "pricing": "$29/mo · 30-day free trial · on the Clover App Market",
     },
+    {
+        "slug": "postingstation", "name": "Posting Station", "hue": "green", "cat": "Marketing",
+        "domain": "postingstation.app", "url": "https://postingstation.app",
+        "tagline": "Write it once.",
+        "card": "Write one post, pick the Page, tick the groups — post now or schedule it, from Chrome or Edge.",
+        "about": "A Chrome and Edge extension for getting your business seen in Facebook groups. Write a post once, choose which Page it posts as, tick the groups, and post now or schedule it — with wording that varies by group, a finder for new groups by keyword and city, and Lead Radar watching your groups for people asking for a recommendation.",
+        "features": [
+            ("Write once, post to every group", "Pick the Page, tick the groups, post now or schedule it."),
+            ("Wording that varies", "Rotate phrasing across groups so every post doesn't read the same."),
+            ("Group finder", "Find groups by keyword and city, then join them in a guided flow."),
+            ("Lead Radar", "Spots \"anyone recommend…\" posts in your groups and drafts your reply."),
+            ("AI drafts", "Turn a one-line brief into a ready-to-post draft."),
+            ("Caps and quiet hours", "Daily limits per Page, randomized gaps, quiet hours, and a kill switch."),
+        ],
+        "pricing": "Free plan · paid from $4.24/mo · 7-day free trial",
+    },
 ]
 
 # Display order across the whole site (nav, scene stops, cards, sitemap).
 # Lifecycle order — each app hands off to the next (the ecosystem story):
 # start the business -> find customers -> local offers -> find workers ->
 # manage workers/time -> run the money. Luuky (coming soon) closes the list.
-_ORDER = ["initor", "huntcustomer", "localsave", "onsms", "ponchi", "tipshare",
-          "deskomigo", "luuky"]
+_ORDER = ["initor", "postingstation", "huntcustomer", "localsave", "onsms", "ponchi",
+          "tipshare", "deskomigo", "luuky"]
 PRODUCTS.sort(key=lambda p: _ORDER.index(p["slug"]))
 
 # ---------------------------------------------------------------------- css
@@ -377,7 +393,11 @@ CSS = """
   .color-bar span:nth-child(4){background:var(--blue)}
 
   @media(max-width:900px){
-    .scard{top:auto;bottom:112px;transform:none;left:24px;right:24px;width:auto}
+    .scard{top:auto;bottom:92px;transform:none;left:24px;right:24px;width:auto}
+    .scard h2{font-size:clamp(26px,7.4vw,34px);margin-bottom:10px}
+    .scard .eyebrow2{margin-bottom:12px}
+    .scard p{font-size:.88rem;line-height:1.5}
+    .scard .meta{margin-top:14px}
     .scard-center{left:50%;right:auto;bottom:auto;top:50%;transform:translate(-50%,-50%);width:min(720px,86vw)}
     .scard p{max-width:none}
     .minimap{display:none!important}
@@ -511,7 +531,7 @@ def head(title, desc, path):
   "email": "hello@zet8.com",
   "address": {"@type": "PostalAddress","streetAddress": "12320 Barker Cypress Rd, Ste 600 #199","addressLocality": "Cypress","addressRegion": "TX","postalCode": "77429","addressCountry": "US"},
   "parentOrganization": {"@type": "Organization","name": "Optima BuildSolutions LLC"},
-  "sameAs": ["https://ponchi.app","https://deskomigo.com","https://huntcustomer.com","https://localsave.com","https://onsms.com","https://initor.com"]
+  "sameAs": ["https://ponchi.app","https://deskomigo.com","https://huntcustomer.com","https://localsave.com","https://onsms.com","https://initor.com","https://postingstation.app"]
 }
 </script>
 <style>%(css)s</style>
@@ -533,6 +553,7 @@ HUE_HEX = {"green": "#3CB371", "yellow": "#F4C82D", "red": "#E84A38", "blue": "#
 # ecosystem flow strip ("an operating system for small businesses").
 STEP = {
     "initor":       "Start the business",
+    "postingstation": "Get the word out",
     "huntcustomer": "Find & manage customers",
     "localsave":    "Bring customers through the door",
     "onsms":        "Find workers",
@@ -551,6 +572,7 @@ PUNCH = {
     "localsave": "Deals from the shop<br><em>down the street</em>.",
     "onsms":     "Post a job by<br><em>text message</em>.",
     "initor":    "Start the company<br><em>this week</em>.",
+    "postingstation": "Write it once.<br>Post to <em>every group</em>.",
     "luuky":     "Something new is<br><em>on the way</em>.",
 }
 
@@ -749,7 +771,7 @@ ABOUT = """
       <p><b>We don't do custom projects.</b> Every ZET8 product is a finished app you can sign up for today — born from real problems we watched real businesses fight: time theft on job sites, invoices written at midnight, leads going cold in spreadsheets, empty shifts with no one to call.</p>
       <p><b>We build for the phone in your pocket.</b> Your office is a truck cab, a counter, a job site. Everything we ship works one-handed on a phone first — in English and Español.</p>
       <p><b>We use AI where it erases busywork.</b> Scanning receipts, drafting summaries, flagging follow-ups — not another chatbot between you and your work.</p>
-      <p><b>Together, they're one system.</b> Start a business with Initor. Find customers with HuntCustomer and bring them through the door with LocalSave. Find workers with OnSMS, run the crew with Ponchi, and run the money with Deskomigo. Each app hands off to the next — an operating system for small business.</p>
+      <p><b>Together, they're one system.</b> Start a business with Initor and get the word out with Posting Station. Find customers with HuntCustomer and bring them through the door with LocalSave. Find workers with OnSMS, run the crew with Ponchi, split the tips with TipShare, and run the money with Deskomigo. Each app hands off to the next — an operating system for small business.</p>
       <p class="legal-note">ZET8 is operated by Optima BuildSolutions LLC · 12320 Barker Cypress Rd, Ste 600 #199, Cypress, TX 77429</p>
     </div>
   </div>
@@ -802,6 +824,7 @@ CONTACT = """
                 <option>LocalSave — local deals</option>
                 <option>OnSMS — on-demand hiring</option>
                 <option>Initor — business launch</option>
+                <option>Posting Station — Facebook group posting</option>
                 <option>Not sure — need advice</option>
               </select>
             </div>
@@ -1323,7 +1346,7 @@ def main():
 
     # home (script URL carries a content hash so deploys bust browser caches)
     home = page("ZET8 — Tech Solutions for Businesses",
-                "ZET8 is an operating system for small business: start it with Initor, win customers with HuntCustomer and LocalSave, staff it with OnSMS and Ponchi, split the tips with TipShare, and run the money with Deskomigo.",
+                "ZET8 is an operating system for small business: start it with Initor, get the word out with Posting Station, win customers with HuntCustomer and LocalSave, staff it with OnSMS and Ponchi, split the tips with TipShare, and run the money with Deskomigo.",
                 "/", home_content(logo_b64), logo_b64)
     home = home.replace('<script defer src="/assets/scene.js"></script>',
                         '<script defer src="/assets/scene.js?v=%s"></script>' % scene_v)
