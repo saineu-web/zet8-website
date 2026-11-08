@@ -78,10 +78,10 @@ PRODUCTS = [
             ("Merchant dashboard", "Publish a deal in minutes and track views and redemptions as they happen."),
             ("Mobile app", "Customers browse, save, and redeem deals straight from their phone."),
             ("English + Español", "Fully bilingual for merchants and shoppers alike."),
-            ("Free to start", "Merchants list their business for free and upgrade only when it's working."),
+            ("Free to join", "Every business joins and posts deals for free. No card, no commission."),
             ("Built for main street", "Restaurants, salons, shops, services — the businesses that make a neighborhood."),
         ],
-        "pricing": "Free for merchants to start · $14.99/mo to grow",
+        "pricing": "Free for shoppers · Free for businesses to join and post",
     },
     {
         "slug": "onsms", "name": "OnSMS", "hue": "green", "cat": "Hiring",
